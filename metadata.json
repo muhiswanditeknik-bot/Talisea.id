@@ -1,0 +1,6 @@
+{
+  "name": "Talisea.id - Platform Rantai Pasok & Marketplace Rumput Laut",
+  "description": "Platform supply chain, marketplace, dan manajemen inventaris cerdas untuk petani rumput laut lokal, hub agregator, ekspedisi kargo, dan pabrik industri pengolahan.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
