@@ -18,7 +18,7 @@ import {
 export const StagedPaymentSection: React.FC = () => {
   const [simulatedKg, setSimulatedKg] = useState<number>(2500);
   const [pricePerKg, setPricePerKg] = useState<number>(19500);
-  const [upfrontPercent, setUpfrontPercent] = useState<number>(85); // 85% default (between 80-90%)
+  const [upfrontPercent, setUpfrontPercent] = useState<number>(80); // 80% default (80% tahap 1, 20% tahap 2)
 
   const totalValue = simulatedKg * pricePerKg;
   const payoutTahap1 = Math.round(totalValue * (upfrontPercent / 100));

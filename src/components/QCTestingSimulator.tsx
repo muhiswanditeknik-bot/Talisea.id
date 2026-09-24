@@ -59,7 +59,7 @@ export const QCTestingSimulator: React.FC = () => {
 
   const finalPricePerKg = Math.max(8000, baseStandardPrice + priceAdj);
   const totalPayout = sampleWeightKg * finalPricePerKg;
-  const payoutTahap1 = Math.round(totalPayout * 0.85);
+  const payoutTahap1 = Math.round(totalPayout * 0.80);
   const payoutTahap2 = totalPayout - payoutTahap1;
 
   const formatIDR = (val: number) => {
@@ -251,7 +251,7 @@ export const QCTestingSimulator: React.FC = () => {
               {/* Tahap 1 Payout Highlight */}
               <div className="bg-emerald-900/60 p-3.5 rounded-xl border border-emerald-500/40 flex items-center justify-between">
                 <div>
-                  <div className="text-[11px] font-bold text-emerald-300">Payout Tahap 1 (85%) Instan:</div>
+                  <div className="text-[11px] font-bold text-emerald-300">Payout Tahap 1 (80%) Instan:</div>
                   <div className="text-lg font-black text-white">{formatIDR(payoutTahap1)}</div>
                   <div className="text-[10px] text-emerald-200/80">Langsung cair di Hub Petani</div>
                 </div>
@@ -261,7 +261,7 @@ export const QCTestingSimulator: React.FC = () => {
               {/* Tahap 2 */}
               <div className="bg-slate-800/50 p-3 rounded-xl border border-slate-700 flex items-center justify-between">
                 <div>
-                  <div className="text-[11px] font-semibold text-slate-400">Pelunasan Tahap 2 (15%):</div>
+                  <div className="text-[11px] font-semibold text-slate-400">Pelunasan Tahap 2 (20%):</div>
                   <div className="text-sm font-bold text-amber-300">{formatIDR(payoutTahap2)}</div>
                 </div>
                 <span className="text-[10px] text-slate-400">Saat QC Pabrik</span>
