@@ -53,7 +53,7 @@ export const InventoryManager: React.FC<InventoryManagerProps> = ({ onOpenReceip
   const [qcWeightKg, setQcWeightKg] = useState<number>(1200);
   const [qcMoisture, setQcMoisture] = useState<number>(35.2);
   const [qcImpurity, setQcImpurity] = useState<number>(1.9);
-  const [qcInspector, setQcInspector] = useState('Ilyas R. (QC Lapangan Petani)');
+  const [qcInspector, setQcInspector] = useState('Muh.Iswandi (QC Lapangan Petani)');
 
   const formatIDR = (val: number) => {
     return new Intl.NumberFormat('id-ID', {
