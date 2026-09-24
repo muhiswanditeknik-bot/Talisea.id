@@ -222,7 +222,7 @@ export const ProblemSolutionSection: React.FC<ProblemSolutionProps> = ({ onOpenR
                       </p>
                     </div>
                     <div className="mt-2.5 pt-2 border-t border-slate-100 text-[10px] font-bold text-teal-700">
-                      ✓ Payout 85% cair seketika
+                      ✓ Payout 80% cair seketika
                     </div>
                   </div>
 
@@ -264,7 +264,7 @@ export const ProblemSolutionSection: React.FC<ProblemSolutionProps> = ({ onOpenR
                       </p>
                     </div>
                     <div className="mt-2.5 pt-2 border-t border-slate-100 text-[10px] font-bold text-amber-700">
-                      ✓ QC Akhir & Pelunasan 15%
+                      ✓ QC Akhir & Pelunasan 20%
                     </div>
                   </div>
 

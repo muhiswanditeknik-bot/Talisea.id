@@ -92,7 +92,7 @@ export const RevenueSharingBreakdown: React.FC<RevenueSharingBreakdownProps> = (
       color: 'emerald',
       icon: UserCheck,
       functionDesc: 'Diterima utuh oleh petani tanpa potongan spekulatif.',
-      note: 'Langsung dicairkan bertahap (DP 85% instan di Hub + 15% saat serah terima pabrik).'
+      note: 'Langsung dicairkan bertahap (DP 80% instan di Hub + 20% saat serah terima pabrik).'
     }
   ];
 
@@ -402,7 +402,7 @@ export const RevenueSharingBreakdown: React.FC<RevenueSharingBreakdownProps> = (
         <div className="p-4 rounded-2xl bg-emerald-50 border border-emerald-200 space-y-1.5">
           <div className="text-[11px] font-bold text-emerald-800 uppercase">Total Dana Diterima Petani</div>
           <div className="text-xl font-black text-emerald-700">{formatIDR(totalFarmerIncome)}</div>
-          <div className="text-[11px] text-emerald-700 font-medium">85% cair di Petani + 15% di Pabrik</div>
+          <div className="text-[11px] text-emerald-700 font-medium">80% cair di Petani + 20% di Pabrik</div>
         </div>
 
         <div className="p-4 rounded-2xl bg-teal-50 border border-teal-200 space-y-1.5 flex flex-col justify-between">

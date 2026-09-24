@@ -194,7 +194,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ setActiveTab, onOpenRe
             </div>
             <div>
               <div className="text-2xl sm:text-3xl font-extrabold text-cyan-400">&lt; 4 Jam</div>
-              <div className="text-xs text-slate-300 mt-1 font-medium">Pencairan Tahap 1 (85%)</div>
+              <div className="text-xs text-slate-300 mt-1 font-medium">Pencairan Tahap 1 (80%)</div>
               <div className="text-[10px] text-slate-400">Tanpa tunggu kapal sandar</div>
             </div>
             <div>

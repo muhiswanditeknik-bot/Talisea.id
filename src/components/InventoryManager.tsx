@@ -104,7 +104,7 @@ export const InventoryManager: React.FC<InventoryManagerProps> = ({ onOpenReceip
     const batchNo = `TAL-NNK-0826-0${batches.length + 1}`;
     const { grade, price } = calculateGradeAndPrice(35.5, newJenis);
     const totalVal = newBeratKeringEst * price;
-    const p1 = Math.round(totalVal * 0.85);
+    const p1 = Math.round(totalVal * 0.80);
     const p2 = totalVal - p1;
 
     const newBatch: SeaweedBatch = {
@@ -153,7 +153,7 @@ export const InventoryManager: React.FC<InventoryManagerProps> = ({ onOpenReceip
 
     const { grade, price } = calculateGradeAndPrice(qcMoisture, selectedBatchForQC.jenisRumputLaut);
     const totalVal = qcWeightKg * price;
-    const p1 = Math.round(totalVal * 0.85);
+    const p1 = Math.round(totalVal * 0.80);
     const p2 = totalVal - p1;
 
     const updated = batches.map(b => {
@@ -292,7 +292,7 @@ export const InventoryManager: React.FC<InventoryManagerProps> = ({ onOpenReceip
               {formatIDR(totalPayout1)}
             </div>
             <div className="text-[11px] text-slate-500 font-medium mt-1">
-              85% dibayar di hari timbang di Hub Petani
+              80% dibayar di hari timbang di Hub Petani
             </div>
           </div>
 
@@ -428,13 +428,13 @@ export const InventoryManager: React.FC<InventoryManagerProps> = ({ onOpenReceip
                     {/* Staged Payout */}
                     <td className="py-3.5 px-4 align-top space-y-1">
                       <div className="flex items-center justify-between text-[11px]">
-                        <span className="text-slate-500">Tahap 1 (85%):</span>
+                        <span className="text-slate-500">Tahap 1 (80%):</span>
                         <span className={`font-bold ${batch.statusTahap1 === 'terbayar' ? 'text-emerald-700' : 'text-amber-600'}`}>
                           {batch.statusTahap1 === 'terbayar' ? '✓ Lunas' : 'Menunggu QC'}
                         </span>
                       </div>
                       <div className="flex items-center justify-between text-[11px]">
-                        <span className="text-slate-500">Tahap 2 (15%):</span>
+                        <span className="text-slate-500">Tahap 2 (20%):</span>
                         <span className={`font-bold ${batch.statusTahap2 === 'terbayar' ? 'text-emerald-700' : 'text-slate-400'}`}>
                           {batch.statusTahap2 === 'terbayar' ? '✓ Lunas' : 'Saat Tiba Pabrik'}
                         </span>
@@ -738,7 +738,7 @@ export const InventoryManager: React.FC<InventoryManagerProps> = ({ onOpenReceip
                 {(() => {
                   const { grade, price } = calculateGradeAndPrice(qcMoisture, selectedBatchForQC.jenisRumputLaut);
                   const total = qcWeightKg * price;
-                  const p1 = Math.round(total * 0.85);
+                  const p1 = Math.round(total * 0.80);
                   const p2 = total - p1;
                   return (
                     <div className="bg-slate-900 text-white p-4 rounded-2xl space-y-2 text-xs">
@@ -755,11 +755,11 @@ export const InventoryManager: React.FC<InventoryManagerProps> = ({ onOpenReceip
                         <span className="font-black text-white text-sm">{formatIDR(total)}</span>
                       </div>
                       <div className="pt-2 border-t border-slate-800 flex justify-between items-center">
-                        <span className="text-emerald-300 font-semibold">Payout Awal Tahap 1 (85%):</span>
+                        <span className="text-emerald-300 font-semibold">Payout Awal Tahap 1 (80%):</span>
                         <span className="font-black text-emerald-400 text-base">{formatIDR(p1)}</span>
                       </div>
                       <div className="text-[10px] text-slate-400">
-                        * Dana Tahap 1 langsung cair ke petani begitu QC disimpan. Sisa 15% ({formatIDR(p2)}) cair saat tiba di pabrik.
+                        * Dana Tahap 1 langsung cair ke petani begitu QC disimpan. Sisa 20% ({formatIDR(p2)}) cair saat tiba di pabrik.
                       </div>
                     </div>
                   );

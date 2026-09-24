@@ -85,10 +85,10 @@ export const WhatsAppPreviewModal: React.FC<WhatsAppPreviewModalProps> = ({
             </div>
 
             <div className="bg-emerald-950/80 p-2.5 rounded-xl border border-emerald-500/40 text-[11px] space-y-1">
-              <div className="font-bold text-emerald-300">💰 DANA TAHAP 1 (85%) SUDAH DITRANSFER:</div>
+              <div className="font-bold text-emerald-300">💰 DANA TAHAP 1 (80%) SUDAH DITRANSFER:</div>
               <div className="text-sm font-black text-white">{formatIDR(currentBatch.payoutTahap1)}</div>
               <div className="text-[10px] text-emerald-200/80">
-                Sisa 15% ({formatIDR(currentBatch.payoutTahap2)}) akan dicairkan saat kargo diverifikasi pabrik pengolah hilir.
+                Sisa 20% ({formatIDR(currentBatch.payoutTahap2)}) akan dicairkan saat kargo diverifikasi pabrik pengolah hilir.
               </div>
             </div>
 

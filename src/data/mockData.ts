@@ -18,8 +18,8 @@ export const INITIAL_BATCHES: SeaweedBatch[] = [
     grade: 'Super (KA <34%)',
     hargaPerKg: 19500,
     totalNilai: 28275000,
-    payoutTahap1: 24033750, // 85%
-    payoutTahap2: 4241250,  // 15%
+    payoutTahap1: 22620000, // 80%
+    payoutTahap2: 5655000,  // 20%
     statusTahap1: 'terbayar',
     statusTahap2: 'pending',
     hubLokasi: 'Hub Agregasi Sentra Hulu Pesisir',
@@ -308,7 +308,7 @@ export const ACTIVE_LOGISTICS_ROUTES: LogisticsRoute[] = [
 export const PILOT_KPI_DATA: PilotKPI = {
   selisihHargaPetani: '+22.4%', // Harga naik dibanding tengkulak tradisional
   biayaLogistikKg: 'Logistik 5,4% • Admin 2,7% • Gudang Hub 2,7%', // Biaya logistik/Handling 5,4%, admin 2,7% dan Gudang hub 2,7% dari Harga pabrik
-  kecepatanPayout: '< 4 Jam (Tahap 1 85%)', // Petani langsung dapat uang di Sentra Hulu
+  kecepatanPayout: '< 4 Jam (Tahap 1 80%)', // Petani langsung dapat uang di Sentra Hulu
   akurasiQCDiscrepancy: '0.8% Selisih', // Deviasi kadar air Hub vs Pabrik sangat minim
   onTimeDelivery: '99.1%',
   petaniTergabung: 48,
@@ -356,7 +356,7 @@ export const INITIAL_FACTORY_OFFERS: FactoryPriceOffer[] = [
     previousPricePerKg: 19800,
     minVolumeTon: 15,
     maxVolumeTon: 150,
-    paymentTerm: 'Escrow Talisea: DP 85% Timbang Sentra + 15% Bongkar Gudang',
+    paymentTerm: 'Escrow Talisea: DP 80% Timbang Sentra + 20% Bongkar Gudang',
     verifiedFactory: true,
     lastUpdated: '2026-08-25 08:30 WITA',
     priceTrend: 'up',
@@ -377,7 +377,7 @@ export const INITIAL_FACTORY_OFFERS: FactoryPriceOffer[] = [
     previousPricePerKg: 20800,
     minVolumeTon: 20,
     maxVolumeTon: 200,
-    paymentTerm: 'Escrow Talisea: DP 85% Timbang Sentra + 15% Bongkar Gudang',
+    paymentTerm: 'Escrow Talisea: DP 80% Timbang Sentra + 20% Bongkar Gudang',
     verifiedFactory: true,
     lastUpdated: '2026-08-25 07:15 WITA',
     priceTrend: 'stable',
@@ -419,7 +419,7 @@ export const INITIAL_FACTORY_OFFERS: FactoryPriceOffer[] = [
     previousPricePerKg: 15500,
     minVolumeTon: 10,
     maxVolumeTon: 80,
-    paymentTerm: 'Escrow Talisea: DP 85% Timbang Sentra + 15% Bongkar Gudang',
+    paymentTerm: 'Escrow Talisea: DP 80% Timbang Sentra + 20% Bongkar Gudang',
     verifiedFactory: true,
     lastUpdated: '2026-08-24 16:20 WIB',
     priceTrend: 'up',
@@ -440,7 +440,7 @@ export const INITIAL_FACTORY_OFFERS: FactoryPriceOffer[] = [
     previousPricePerKg: 14000,
     minVolumeTon: 15,
     maxVolumeTon: 120,
-    paymentTerm: 'Escrow Talisea: DP 85% Timbang Sentra + 15% Verifikasi Lab',
+    paymentTerm: 'Escrow Talisea: DP 80% Timbang Sentra + 20% Verifikasi Lab',
     verifiedFactory: true,
     lastUpdated: '2026-08-24 14:00 WIB',
     priceTrend: 'down',
@@ -482,7 +482,7 @@ export const INITIAL_FACTORY_OFFERS: FactoryPriceOffer[] = [
     previousPricePerKg: 19500,
     minVolumeTon: 10,
     maxVolumeTon: 60,
-    paymentTerm: 'Escrow Talisea: DP 85% Timbang Sentra + 15% Tiba Pabrik',
+    paymentTerm: 'Escrow Talisea: DP 80% Timbang Sentra + 20% Tiba Pabrik',
     verifiedFactory: false,
     lastUpdated: '2026-08-23 11:30 WITA',
     priceTrend: 'up',

@@ -49,7 +49,7 @@ export const FarmerToFactoryFlowSection: React.FC<FarmerToFactoryFlowProps> = ({
         'Uji Kadar Air Digital (Target 35-37% SNI)',
         'Timbangan Digital Terkalibrasi (Zero Rafaksi Liar)',
         'Penerbitan Surat/Nota Timbang Digital Ber-QR Code',
-        'Pencairan Uang Muka 85% (Payout Tahap 1 Langsung)'
+        'Pencairan Uang Muka 80% (Payout Tahap 1 Langsung)'
       ],
       duration: 'Waktu proses: 1-2 Jam di Hub Sentra',
       badge: 'First-Mile Origin'
@@ -107,16 +107,16 @@ export const FarmerToFactoryFlowSection: React.FC<FarmerToFactoryFlowProps> = ({
     },
     {
       step: 5,
-      tag: 'TAHAP 5: SERAH TERIMA & PELUNASAN AKHIR (15%)',
-      title: 'QC Masuk Pabrik & Pelunasan Akhir 15%',
+      tag: 'TAHAP 5: SERAH TERIMA & PELUNASAN AKHIR (20%)',
+      title: 'QC Masuk Pabrik & Pelunasan Akhir 20%',
       actor: 'Pabrik Pengolah Industri Hilir (Off-Taker) ➔ Escrow Talisea',
       icon: Building2,
       iconBg: 'bg-slate-900 text-white',
-      description: 'Pabrik melakukan sampling QC akhir penerimaan (kadar air & kekuatan gel), menerbitkan Berita Acara Serah Terima (BAST) digital, dan escrow otomatis mencairkan sisa 15% pelunasan ke rekening petani.',
+      description: 'Pabrik melakukan sampling QC akhir penerimaan (kadar air & kekuatan gel), menerbitkan Berita Acara Serah Terima (BAST) digital, dan escrow otomatis mencairkan sisa 20% pelunasan ke rekening petani.',
       highlights: [
         'Penerimaan bahan baku terverifikasi sesuai Purchase Order',
         'BAST Digital instan terbit via sistem Talisea.id',
-        'Pelunasan Tahap 2 (15%) otomatis cair ke rekening petani',
+        'Pelunasan Tahap 2 (20%) otomatis cair ke rekening petani',
         'Pabrik mendapatkan jaminan suplai kontinu & traceable'
       ],
       duration: 'Waktu serah terima: <24 Jam di Pabrik',
@@ -313,7 +313,7 @@ export const FarmerToFactoryFlowSection: React.FC<FarmerToFactoryFlowProps> = ({
                           </div>
                           <div className="bg-emerald-950/60 p-3 rounded-xl border border-emerald-500/30">
                             <div className="text-[10px] text-emerald-300 font-bold">Skema Payout Tahap 1:</div>
-                            <div className="text-lg font-black text-white">85% Cair Instan</div>
+                            <div className="text-lg font-black text-white">80% Cair Instan</div>
                             <div className="text-[10px] text-emerald-200/80">Uang langsung masuk rekening petani dalam &lt;4 jam setelah timbang</div>
                           </div>
                         </div>
@@ -369,7 +369,7 @@ export const FarmerToFactoryFlowSection: React.FC<FarmerToFactoryFlowProps> = ({
                           </div>
                           <div className="bg-emerald-950/60 p-3 rounded-xl border border-emerald-500/30">
                             <div className="text-[10px] text-emerald-300 font-bold">Pelunasan Tahap 2:</div>
-                            <div className="text-base font-black text-white">15% Pelunasan Final</div>
+                            <div className="text-base font-black text-white">20% Pelunasan Final</div>
                             <div className="text-[10px] text-emerald-200/80">Langsung dikirim ke rekening petani begitu BAST ditandatangani</div>
                           </div>
                         </div>
@@ -478,7 +478,7 @@ export const FarmerToFactoryFlowSection: React.FC<FarmerToFactoryFlowProps> = ({
                   </div>
 
                   <div className="text-center text-emerald-600 text-xs font-bold flex items-center justify-center space-x-1">
-                    <span>↓ Payout Tahap 1 (85% cair di tempat)</span>
+                    <span>↓ Payout Tahap 1 (80% cair di tempat)</span>
                   </div>
 
                   <div className="p-3.5 bg-white rounded-xl border border-emerald-300 text-xs flex items-center justify-between">
@@ -498,7 +498,7 @@ export const FarmerToFactoryFlowSection: React.FC<FarmerToFactoryFlowProps> = ({
                   <div className="p-3.5 bg-white rounded-xl border border-emerald-300 text-xs flex items-center justify-between">
                     <div>
                       <div className="font-bold text-slate-900">3. Gerbang Pabrik Pengolahan Industri Hilir</div>
-                      <div className="text-[10px] text-slate-500">QC penerimaan, BAST digital & pelunasan 15%</div>
+                      <div className="text-[10px] text-slate-500">QC penerimaan, BAST digital & pelunasan 20%</div>
                     </div>
                     <span className="text-xs font-bold text-slate-900">
                       PO Rp 20.000/kg
@@ -566,7 +566,7 @@ export const FarmerToFactoryFlowSection: React.FC<FarmerToFactoryFlowProps> = ({
               <Banknote className="w-5 h-5" />
             </div>
             <h4 className="font-extrabold text-slate-900 text-sm">
-              Pembayaran Berjenjang (85% + 15%)
+              Pembayaran Berjenjang (80% + 20%)
             </h4>
             <p className="text-xs text-slate-600 leading-relaxed">
               Memberikan likuiditas langsung bagi petani saat panen di Sentra Hulu sekaligus melindungi pabrik dengan klausul QC serah terima di gerbang industri hilir.

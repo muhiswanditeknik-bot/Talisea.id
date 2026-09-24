@@ -506,7 +506,7 @@ export const MarketplaceView: React.FC<MarketplaceViewProps> = ({ onOpenRegister
                       </div>
 
                       <div className="text-[10px] text-emerald-200/90 leading-relaxed bg-emerald-950/50 p-2.5 rounded-lg border border-emerald-800/40">
-                        🔒 <strong>Smart Escrow Talisea:</strong> 85% dicairkan ke rekening petani saat Hub Petani serah kargo timbang, 15% dilunasi saat kargo tiba di pabrik.
+                        🔒 <strong>Smart Escrow Talisea:</strong> 80% dicairkan ke rekening petani saat Hub Petani serah kargo timbang, 20% dilunasi saat kargo tiba di pabrik.
                       </div>
                     </div>
 

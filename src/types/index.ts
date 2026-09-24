@@ -31,8 +31,8 @@ export interface SeaweedBatch {
   grade: QualityGrade;
   hargaPerKg: number;
   totalNilai: number;
-  payoutTahap1: number; // 85%
-  payoutTahap2: number; // 15%
+  payoutTahap1: number; // 80%
+  payoutTahap2: number; // 20%
   statusTahap1: 'pending' | 'terbayar';
   statusTahap2: 'pending' | 'terbayar';
   hubLokasi: string;

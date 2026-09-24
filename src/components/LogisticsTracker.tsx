@@ -58,7 +58,7 @@ export const LogisticsTracker: React.FC = () => {
     {
       step: 5,
       title: 'Last-Mile & Gudang Pabrik',
-      desc: 'Pengantaran ke gudang PT Celebes Seaweed (Pabrik), QC akhir penerimaan, BAST & pelunasan 15%.',
+      desc: 'Pengantaran ke gudang PT Celebes Seaweed (Pabrik), QC akhir penerimaan, BAST & pelunasan 20%.',
       status: 'Jadwal 27 Agt',
       completed: false,
       icon: Truck

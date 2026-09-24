@@ -142,12 +142,12 @@ export const ReceiptModal: React.FC<ReceiptModalProps> = ({ batch, isOpen, onClo
             </div>
             
             <div className="pt-2 border-t border-emerald-200 flex justify-between items-center text-xs">
-              <span className="font-bold text-emerald-900">✓ Payout Tahap 1 (85% di Hub Agregasi):</span>
+              <span className="font-bold text-emerald-900">✓ Payout Tahap 1 (80% di Hub Agregasi):</span>
               <span className="font-black text-emerald-800 text-sm">{formatIDR(batch.payoutTahap1)}</span>
             </div>
 
             <div className="flex justify-between items-center text-[11px] text-slate-600">
-              <span>Pelunasan Tahap 2 (15% di Pabrik Pengolah):</span>
+              <span>Pelunasan Tahap 2 (20% di Pabrik Pengolah):</span>
               <span className="font-bold text-slate-800">{formatIDR(batch.payoutTahap2)}</span>
             </div>
           </div>

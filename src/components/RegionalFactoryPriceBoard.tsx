@@ -188,7 +188,7 @@ export const RegionalFactoryPriceBoard: React.FC<RegionalFactoryPriceBoardProps>
   const [formBuyingPrice, setFormBuyingPrice] = useState<number>(20500);
   const [formMaxMoisture, setFormMaxMoisture] = useState<number>(36.0);
   const [formMinVolumeTon, setFormMinVolumeTon] = useState<number>(15);
-  const [formPaymentTerm, setFormPaymentTerm] = useState<string>('Escrow Talisea: DP 85% Timbang + 15% Tiba');
+  const [formPaymentTerm, setFormPaymentTerm] = useState<string>('Escrow Talisea: DP 80% Timbang + 20% Tiba');
   const [formPicContact, setFormPicContact] = useState<string>('+6285249402129');
   const [formNotes, setFormNotes] = useState<string>('');
   const [showUpdateSuccess, setShowUpdateSuccess] = useState<boolean>(false);
@@ -268,8 +268,8 @@ export const RegionalFactoryPriceBoard: React.FC<RegionalFactoryPriceBoardProps>
       const totalLocalTraderValue = localTraderPrice * volumeKg;
       const totalAdditionalProfit = marginGainPerKg * volumeKg;
 
-      const payoutTahap1 = totalNetPayout * 0.85;
-      const payoutTahap2 = totalNetPayout * 0.15;
+      const payoutTahap1 = totalNetPayout * 0.80;
+      const payoutTahap2 = totalNetPayout * 0.20;
 
       return {
         factory,
@@ -428,7 +428,7 @@ export const RegionalFactoryPriceBoard: React.FC<RegionalFactoryPriceBoardProps>
     setFormBuyingPrice(20500);
     setFormMaxMoisture(36.0);
     setFormMinVolumeTon(15);
-    setFormPaymentTerm('Escrow Talisea: DP 85% Timbang Sentra + 15% Bongkar Gudang');
+    setFormPaymentTerm('Escrow Talisea: DP 80% Timbang Sentra + 20% Bongkar Gudang');
     setFormPicContact(loggedCompany.picPhone);
     setFormNotes('');
     setIsUpdateModalOpen(true);
@@ -758,7 +758,7 @@ export const RegionalFactoryPriceBoard: React.FC<RegionalFactoryPriceBoardProps>
             </div>
             <div className="text-xs">
               <div className="font-bold text-slate-900">Jaminan Transparansi Rantai</div>
-              <div className="text-slate-500 text-[11px]">85% cair di Hub Sentra saat timbang digital</div>
+              <div className="text-slate-500 text-[11px]">80% cair di Hub Sentra saat timbang digital</div>
             </div>
           </div>
         </div>
@@ -1023,11 +1023,11 @@ export const RegionalFactoryPriceBoard: React.FC<RegionalFactoryPriceBoardProps>
                   <div className="text-xs text-slate-400 font-semibold">Skema Pencairan Bertahap:</div>
                   <div className="text-xs text-slate-200 mt-1.5 space-y-1">
                     <div className="flex justify-between">
-                      <span>✓ Tahap 1 (85% di Hub Asal):</span>
+                      <span>✓ Tahap 1 (80% di Hub Asal):</span>
                       <strong className="text-emerald-400">{formatIDR(specificRoute.payoutTahap1)}</strong>
                     </div>
                     <div className="flex justify-between text-slate-400">
-                      <span>• Tahap 2 (15% di Pabrik):</span>
+                      <span>• Tahap 2 (20% di Pabrik):</span>
                       <span>{formatIDR(specificRoute.payoutTahap2)}</span>
                     </div>
                   </div>
@@ -1836,7 +1836,7 @@ export const RegionalFactoryPriceBoard: React.FC<RegionalFactoryPriceBoardProps>
                 <input
                   type="text"
                   required
-                  placeholder="e.g. Escrow Talisea: DP 85% Timbang Sentra + 15% Tiba Pabrik"
+                  placeholder="e.g. Escrow Talisea: DP 80% Timbang Sentra + 20% Tiba Pabrik"
                   value={formPaymentTerm}
                   onChange={(e) => setFormPaymentTerm(e.target.value)}
                   className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
