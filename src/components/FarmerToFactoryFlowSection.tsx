@@ -22,6 +22,7 @@ import {
   Info
 } from 'lucide-react';
 import { TaliseaLogo } from './TaliseaLogo';
+import { RevenueSharingBreakdown } from './RevenueSharingBreakdown';
 
 interface FarmerToFactoryFlowProps {
   onOpenRegister?: (role?: string) => void;
@@ -33,7 +34,7 @@ export const FarmerToFactoryFlowSection: React.FC<FarmerToFactoryFlowProps> = ({
   onOpenQCSimulator
 }) => {
   const [activeStep, setActiveStep] = useState<number>(1);
-  const [activeTabMode, setActiveTabMode] = useState<'interactive' | 'comparison'>('interactive');
+  const [activeTabMode, setActiveTabMode] = useState<'interactive' | 'comparison' | 'revenue-share'>('interactive');
 
   const pipelineSteps = [
     {
@@ -146,7 +147,7 @@ export const FarmerToFactoryFlowSection: React.FC<FarmerToFactoryFlowProps> = ({
 
           {/* Toggle View Mode */}
           <div className="flex items-center justify-center mt-6">
-            <div className="bg-slate-100 p-1 rounded-2xl border border-slate-200 inline-flex space-x-1">
+            <div className="bg-slate-100 p-1.5 rounded-2xl border border-slate-200 inline-flex flex-wrap justify-center gap-1">
               <button
                 onClick={() => setActiveTabMode('interactive')}
                 className={`px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
@@ -167,11 +168,21 @@ export const FarmerToFactoryFlowSection: React.FC<FarmerToFactoryFlowProps> = ({
               >
                 Perbandingan Rantai: Lama vs Talisea.id
               </button>
+              <button
+                onClick={() => setActiveTabMode('revenue-share')}
+                className={`px-4 py-2 rounded-xl text-xs font-extrabold transition-all cursor-pointer flex items-center space-x-1.5 ${
+                  activeTabMode === 'revenue-share'
+                    ? 'bg-emerald-600 text-white shadow-xs'
+                    : 'text-emerald-800 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200'
+                }`}
+              >
+                <span>★ Bagi Hasil dari Harga Awal (89,2%)</span>
+              </button>
             </div>
           </div>
         </div>
 
-        {activeTabMode === 'interactive' ? (
+        {activeTabMode === 'interactive' && (
           <div>
             {/* Top Flow Step Progress Bar */}
             <div className="grid grid-cols-2 sm:grid-cols-5 gap-2 sm:gap-3 mb-8">
@@ -381,8 +392,10 @@ export const FarmerToFactoryFlowSection: React.FC<FarmerToFactoryFlowProps> = ({
               );
             })()}
           </div>
-        ) : (
-          /* Comparison Mode */
+        )}
+
+        {/* Comparison Mode */}
+        {activeTabMode === 'comparison' && (
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-stretch animate-in fade-in duration-200">
             
             {/* Traditional Scheme (Broken) */}
@@ -512,6 +525,13 @@ export const FarmerToFactoryFlowSection: React.FC<FarmerToFactoryFlowProps> = ({
               </div>
             </div>
 
+          </div>
+        )}
+
+        {/* Revenue Share Mode */}
+        {activeTabMode === 'revenue-share' && (
+          <div className="animate-in fade-in duration-200">
+            <RevenueSharingBreakdown onOpenRegister={onOpenRegister} />
           </div>
         )}
 

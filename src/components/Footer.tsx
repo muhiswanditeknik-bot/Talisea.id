@@ -105,8 +105,8 @@ export const Footer: React.FC<FooterProps> = ({ setActiveTab, onOpenRegister }) 
                 </button>
               </li>
               <li>
-                <button onClick={() => setActiveTab('calculator')} className="hover:text-emerald-400 transition-colors">
-                  Kalkulator Margin Petani
+                <button onClick={() => setActiveTab('calculator')} className="hover:text-emerald-400 text-emerald-400 font-semibold transition-colors">
+                  ★ Persentase Bagi Hasil & Margin (89,2%)
                 </button>
               </li>
             </ul>

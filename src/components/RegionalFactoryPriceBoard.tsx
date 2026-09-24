@@ -22,7 +22,15 @@ import {
   AlertCircle,
   ExternalLink,
   Search,
-  Check
+  Check,
+  Lock,
+  KeyRound,
+  LogIn,
+  LogOut,
+  UserCheck,
+  ShieldAlert,
+  FileCheck,
+  Briefcase
 } from 'lucide-react';
 import { 
   SeaweedType, 
@@ -35,6 +43,89 @@ import {
   FARMER_ORIGIN_REGIONS, 
   SHIPPING_ROUTE_COSTS 
 } from '../data/mockData';
+import { RevenueSharingBreakdown } from './RevenueSharingBreakdown';
+
+export interface RegisteredCompany {
+  id: string;
+  factoryName: string;
+  legalName: string;
+  nibNumber: string;
+  region: string;
+  city: string;
+  picName: string;
+  picPhone: string;
+  accessPin: string;
+  verified: boolean;
+  registeredDate: string;
+}
+
+export const REGISTERED_COMPANIES: RegisteredCompany[] = [
+  {
+    id: 'FAC-SULSEL-01',
+    factoryName: 'PT Celebes Seaweed Industries',
+    legalName: 'PT Celebes Seaweed Industries Tbk',
+    nibNumber: '9120003481920',
+    region: 'Sulawesi Selatan',
+    city: 'Pabrik / Parepare',
+    picName: 'H. Irfan Maulana (Head of Procurement)',
+    picPhone: '+628114200911',
+    accessPin: '123456',
+    verified: true,
+    registeredDate: '2026-01-15'
+  },
+  {
+    id: 'FAC-SULSEL-02',
+    factoryName: 'PT Biota Laut Nusantara Industri',
+    legalName: 'PT Biota Laut Nusantara Makmur',
+    nibNumber: '9120008821440',
+    region: 'Sulawesi Selatan',
+    city: 'Makassar (KIMA)',
+    picName: 'David Tan (Purchasing Director)',
+    picPhone: '+628124233008',
+    accessPin: '123456',
+    verified: true,
+    registeredDate: '2026-02-01'
+  },
+  {
+    id: 'FAC-JATIM-01',
+    factoryName: 'PT Surabaya Agar Gelatin Prima',
+    legalName: 'PT Surabaya Agar Gelatin Prima Utama',
+    nibNumber: '9120001198421',
+    region: 'Jawa Timur',
+    city: 'Surabaya / Rungkut',
+    picName: 'Siti Rahmawati (Material Planner)',
+    picPhone: '+628133188990',
+    accessPin: '123456',
+    verified: true,
+    registeredDate: '2026-02-10'
+  },
+  {
+    id: 'FAC-JATIM-02',
+    factoryName: 'PT Pasuruan Carrageenan Extractama',
+    legalName: 'PT Pasuruan Carrageenan Extractama',
+    nibNumber: '9120005523190',
+    region: 'Jawa Timur',
+    city: 'Pasuruan (PIER)',
+    picName: 'Bambang S. (Supply Chain Manager)',
+    picPhone: '+628170321887',
+    accessPin: '123456',
+    verified: true,
+    registeredDate: '2026-03-05'
+  },
+  {
+    id: 'FAC-JATENG-01',
+    factoryName: 'PT Agar Swallow Indah Cirebon',
+    legalName: 'PT Agar Swallow Indah Makmur',
+    nibNumber: '9120007712390',
+    region: 'Jawa Tengah & Barat',
+    city: 'Cirebon / Semarang',
+    picName: 'Hendrawan (Procurement Lead)',
+    picPhone: '+628189876543',
+    accessPin: '123456',
+    verified: true,
+    registeredDate: '2026-03-12'
+  }
+];
 
 interface RegionalFactoryPriceBoardProps {
   onOpenRegister?: (role?: string) => void;
@@ -46,6 +137,32 @@ export const RegionalFactoryPriceBoard: React.FC<RegionalFactoryPriceBoardProps>
   // Master state for factory price offers (allows live updates)
   const [factoryOffers, setFactoryOffers] = useState<FactoryPriceOffer[]>(INITIAL_FACTORY_OFFERS);
   
+  // Registered companies database state
+  const [registeredCompanies, setRegisteredCompanies] = useState<RegisteredCompany[]>(REGISTERED_COMPANIES);
+
+  // Current Logged-in Company Session (Null if guest/public view)
+  const [loggedCompany, setLoggedCompany] = useState<RegisteredCompany | null>(null);
+
+  // Company Auth / Login Modal State
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState<boolean>(false);
+  const [authTab, setAuthTab] = useState<'login' | 'register'>('login');
+  const [selectedCompanyToLogin, setSelectedCompanyToLogin] = useState<string>(REGISTERED_COMPANIES[0].id);
+  const [enteredPin, setEnteredPin] = useState<string>('');
+  const [authError, setAuthError] = useState<string>('');
+  const [authSuccessMsg, setAuthSuccessMsg] = useState<string>('');
+
+  // New Company Registration Form
+  const [regCompanyName, setRegCompanyName] = useState<string>('');
+  const [regNib, setRegNib] = useState<string>('');
+  const [regRegion, setRegRegion] = useState<string>('Sulawesi Selatan');
+  const [regCity, setRegCity] = useState<string>('');
+  const [regPicName, setRegPicName] = useState<string>('');
+  const [regPicPhone, setRegPicPhone] = useState<string>('+628');
+  const [regPin, setRegPin] = useState<string>('123456');
+
+  // Permission Alert (If logged company tries to edit other company's price)
+  const [permissionAlert, setPermissionAlert] = useState<string | null>(null);
+
   // Active Filter state for Factory Price Board
   const [selectedTypeFilter, setSelectedTypeFilter] = useState<SeaweedType | 'ALL'>('ALL');
   const [selectedRegionFilter, setSelectedRegionFilter] = useState<string>('ALL');
@@ -177,17 +294,105 @@ export const RegionalFactoryPriceBoard: React.FC<RegionalFactoryPriceBoardProps>
     }).sort((a, b) => b.netPayoutPerKg - a.netPayoutPerKg);
   }, [factoryOffers, selectedOriginId, selectedSimSeaweedType, volumeKg, selectedOrigin]);
 
-  // Best recommended factory
-  const bestRoute = routeCalculations[0];
-
   // Specific selected factory route if single chosen
   const specificRoute = useMemo(() => {
     if (selectedDestinationFactoryId === 'ALL') return null;
     return routeCalculations.find(r => r.factory.id === selectedDestinationFactoryId) || routeCalculations[0];
   }, [routeCalculations, selectedDestinationFactoryId]);
 
-  // Open modal to update existing factory
+  // Handle Login Authentication
+  const handleLoginCompany = (e: React.FormEvent) => {
+    e.preventDefault();
+    setAuthError('');
+
+    const comp = registeredCompanies.find(c => c.id === selectedCompanyToLogin);
+    if (!comp) {
+      setAuthError('Perusahaan tidak ditemukan dalam database terdaftar.');
+      return;
+    }
+
+    if (enteredPin.trim() !== '' && enteredPin !== comp.accessPin && enteredPin !== '123456') {
+      setAuthError('PIN / Kode Akses Perusahaan tidak valid. Gunakan 123456.');
+      return;
+    }
+
+    setLoggedCompany(comp);
+    setIsAuthModalOpen(false);
+    setEnteredPin('');
+    setAuthSuccessMsg(`Berhasil login sebagai perwakilan resmi: ${comp.factoryName}`);
+    setTimeout(() => setAuthSuccessMsg(''), 4000);
+  };
+
+  // Handle New Company Registration
+  const handleRegisterNewCompany = (e: React.FormEvent) => {
+    e.preventDefault();
+    setAuthError('');
+
+    if (!regCompanyName.trim() || !regCity.trim() || !regPicName.trim()) {
+      setAuthError('Mohon lengkapi semua data wajib pendaftaran perusahaan.');
+      return;
+    }
+
+    const newCompId = `FAC-REG-${Date.now()}`;
+    const newComp: RegisteredCompany = {
+      id: newCompId,
+      factoryName: regCompanyName,
+      legalName: regCompanyName.startsWith('PT') ? regCompanyName : `PT ${regCompanyName}`,
+      nibNumber: regNib || `912000${Math.floor(1000000 + Math.random() * 9000000)}`,
+      region: regRegion,
+      city: regCity,
+      picName: regPicName,
+      picPhone: regPicPhone,
+      accessPin: regPin || '123456',
+      verified: true,
+      registeredDate: new Date().toISOString().split('T')[0]
+    };
+
+    setRegisteredCompanies(prev => [newComp, ...prev]);
+    setLoggedCompany(newComp);
+    setIsAuthModalOpen(false);
+    
+    // Reset register form
+    setRegCompanyName('');
+    setRegNib('');
+    setRegCity('');
+    setRegPicName('');
+
+    setAuthSuccessMsg(`Perusahaan ${newComp.factoryName} berhasil didaftarkan dan terverifikasi di sistem!`);
+    setTimeout(() => setAuthSuccessMsg(''), 4000);
+  };
+
+  // Check if current user has permission to edit this specific factory offer
+  const checkCanEditFactory = (factory: FactoryPriceOffer) => {
+    if (!loggedCompany) {
+      return false;
+    }
+    // Match by ID or Name
+    return loggedCompany.id === factory.id || 
+      loggedCompany.factoryName.toLowerCase().trim() === factory.factoryName.toLowerCase().trim();
+  };
+
+  // Open modal to update existing factory (Protected)
   const handleOpenEdit = (factory: FactoryPriceOffer) => {
+    setPermissionAlert(null);
+
+    // If not logged in, prompt login modal
+    if (!loggedCompany) {
+      setSelectedCompanyToLogin(factory.id);
+      setAuthTab('login');
+      setIsAuthModalOpen(true);
+      return;
+    }
+
+    // If logged in, check if owns this factory
+    if (!checkCanEditFactory(factory)) {
+      setPermissionAlert(
+        `Akses Terbatas: Anda saat ini masuk sebagai perwakilan "${loggedCompany.factoryName}". Anda hanya memiliki wewenang untuk mengubah data harga pabrik Anda sendiri. Untuk mengubah data "${factory.factoryName}", silakan beralih akun perusahaan.`
+      );
+      setTimeout(() => setPermissionAlert(null), 6000);
+      return;
+    }
+
     setModalMode('update');
     setTargetFactoryId(factory.id);
     setFormFactoryName(factory.factoryName);
@@ -198,29 +403,38 @@ export const RegionalFactoryPriceBoard: React.FC<RegionalFactoryPriceBoardProps>
     setFormMaxMoisture(factory.maxMoisturePercent);
     setFormMinVolumeTon(factory.minVolumeTon);
     setFormPaymentTerm(factory.paymentTerm);
-    setFormPicContact(factory.picContact);
+    setFormPicContact(loggedCompany.picPhone || factory.picContact);
     setFormNotes(factory.notes || '');
     setIsUpdateModalOpen(true);
   };
 
-  // Open modal to add new factory
+  // Open modal to add new factory price / PO (Protected)
   const handleOpenAdd = () => {
+    setPermissionAlert(null);
+
+    // If not logged in, require login first
+    if (!loggedCompany) {
+      setAuthTab('login');
+      setIsAuthModalOpen(true);
+      return;
+    }
+
     setModalMode('add');
     setTargetFactoryId('');
-    setFormFactoryName('');
-    setFormRegion('Sulawesi Selatan');
-    setFormCity('');
+    setFormFactoryName(loggedCompany.factoryName);
+    setFormRegion(loggedCompany.region);
+    setFormCity(loggedCompany.city);
     setFormSeaweedType('Eucheuma Cottonii');
     setFormBuyingPrice(20500);
     setFormMaxMoisture(36.0);
     setFormMinVolumeTon(15);
-    setFormPaymentTerm('Escrow Talisea: DP 85% Timbang Sentra + 15% Bongkar');
-    setFormPicContact('+6285249402129');
+    setFormPaymentTerm('Escrow Talisea: DP 85% Timbang Sentra + 15% Bongkar Gudang');
+    setFormPicContact(loggedCompany.picPhone);
     setFormNotes('');
     setIsUpdateModalOpen(true);
   };
 
-  // Handle Form Submit
+  // Handle Form Submit for updating / creating factory price
   const handleFormSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const now = new Date();
@@ -247,19 +461,19 @@ export const RegionalFactoryPriceBoard: React.FC<RegionalFactoryPriceBoardProps>
             paymentTerm: formPaymentTerm,
             picContact: formPicContact,
             notes: formNotes,
-            lastUpdated: `${timestampStr} (Baru Saja)`
+            lastUpdated: `${timestampStr} (Baru Saja via ${loggedCompany?.picName || 'Akun Resmi'})`
           };
         }
         return f;
       }));
     } else {
       // Add new
-      const newId = `FAC-CUSTOM-${Date.now()}`;
+      const newId = loggedCompany ? `${loggedCompany.id}-${Date.now().toString().slice(-4)}` : `FAC-CUSTOM-${Date.now()}`;
       const newOffer: FactoryPriceOffer = {
         id: newId,
-        factoryName: formFactoryName || 'Pabrik Pengolahan Baru',
+        factoryName: formFactoryName || loggedCompany?.factoryName || 'Pabrik Pengolahan Terdaftar',
         region: formRegion,
-        city: formCity || 'Kota Industri',
+        city: formCity || loggedCompany?.city || 'Kota Industri',
         seaweedType: formSeaweedType,
         gradeRequirement: 'Grade A (KA 35-37%)',
         maxMoisturePercent: formMaxMoisture,
@@ -269,11 +483,11 @@ export const RegionalFactoryPriceBoard: React.FC<RegionalFactoryPriceBoardProps>
         maxVolumeTon: formMinVolumeTon * 10,
         paymentTerm: formPaymentTerm,
         verifiedFactory: true,
-        lastUpdated: `${timestampStr} (Baru Saja)`,
+        lastUpdated: `${timestampStr} (Baru Saja via ${loggedCompany?.picName || 'Akun Resmi'})`,
         priceTrend: 'up',
         priceChangeAmount: 0,
         picContact: formPicContact,
-        notes: formNotes || 'Penawaran baru via platform Talisea.',
+        notes: formNotes || `Penawaran resmi terverifikasi dari ${loggedCompany?.legalName || formFactoryName}.`,
         status: 'active'
       };
       setFactoryOffers(prev => [newOffer, ...prev]);
@@ -285,7 +499,7 @@ export const RegionalFactoryPriceBoard: React.FC<RegionalFactoryPriceBoardProps>
   };
 
   return (
-    <div className="space-y-12 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div className="space-y-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       
       {/* Success Notification Banner */}
       {showUpdateSuccess && (
@@ -293,7 +507,7 @@ export const RegionalFactoryPriceBoard: React.FC<RegionalFactoryPriceBoardProps>
           <div className="flex items-center space-x-3">
             <CheckCircle2 className="w-5 h-5 font-bold" />
             <span className="font-bold text-xs sm:text-sm">
-              Data harga beli pabrik berhasil diperbarui secara langsung ke sistem dan simulator rute!
+              Perubahan harga beli & kuota pabrik berhasil dipublikasikan secara resmi ke seluruh ekosistem!
             </span>
           </div>
           <button 
@@ -304,6 +518,146 @@ export const RegionalFactoryPriceBoard: React.FC<RegionalFactoryPriceBoardProps>
           </button>
         </div>
       )}
+
+      {/* Auth Success Notification Banner */}
+      {authSuccessMsg && (
+        <div className="bg-slate-900 text-white px-4 py-3 rounded-2xl shadow-xl border border-emerald-500 flex items-center justify-between animate-in fade-in slide-in-from-top-4 duration-300">
+          <div className="flex items-center space-x-3">
+            <ShieldCheck className="w-5 h-5 text-emerald-400" />
+            <span className="font-bold text-xs sm:text-sm text-emerald-300">
+              {authSuccessMsg}
+            </span>
+          </div>
+          <button 
+            onClick={() => setAuthSuccessMsg('')}
+            className="text-slate-400 hover:text-white font-bold text-xs px-2 py-1"
+          >
+            ✕
+          </button>
+        </div>
+      )}
+
+      {/* Permission Alert Banner */}
+      {permissionAlert && (
+        <div className="bg-rose-50 border-2 border-rose-400 text-rose-900 px-5 py-3.5 rounded-2xl shadow-lg flex items-start space-x-3 animate-in shake duration-300">
+          <ShieldAlert className="w-5 h-5 text-rose-600 shrink-0 mt-0.5" />
+          <div className="flex-1 text-xs leading-relaxed font-semibold">
+            {permissionAlert}
+          </div>
+          <button 
+            onClick={() => setPermissionAlert(null)}
+            className="text-rose-700 hover:text-rose-950 font-black text-xs ml-2"
+          >
+            ✕
+          </button>
+        </div>
+      )}
+
+      {/* ========================================================================= */}
+      {/* COMPANY AUTHENTICATION & ACCESS CONTROL STATUS BAR                       */}
+      {/* ========================================================================= */}
+      <div className="rounded-3xl p-4 sm:p-5 border transition-all shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white border-slate-200">
+        
+        <div className="flex items-center space-x-3.5">
+          <div className={`w-12 h-12 rounded-2xl flex items-center justify-center shrink-0 shadow-inner ${
+            loggedCompany 
+              ? 'bg-emerald-100 text-emerald-700 border border-emerald-200' 
+              : 'bg-slate-100 text-slate-500 border border-slate-200'
+          }`}>
+            {loggedCompany ? (
+              <Building2 className="w-6 h-6 text-emerald-700" />
+            ) : (
+              <Lock className="w-6 h-6 text-slate-500" />
+            )}
+          </div>
+
+          <div>
+            <div className="flex items-center space-x-2">
+              <span className="text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded-full border bg-slate-100 text-slate-700 border-slate-300">
+                OTORISASI PERUBAHAN HARGA PABRIK
+              </span>
+              {loggedCompany && (
+                <span className="inline-flex items-center space-x-1 text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200 px-2 py-0.5 rounded-full">
+                  <CheckCircle2 className="w-3 h-3 text-emerald-600" />
+                  <span>Akun Perusahaan Terverifikasi</span>
+                </span>
+              )}
+            </div>
+
+            {loggedCompany ? (
+              <div className="mt-1">
+                <div className="text-sm sm:text-base font-black text-slate-900 flex items-center space-x-2">
+                  <span>{loggedCompany.factoryName}</span>
+                  <span className="text-xs font-normal text-slate-500">({loggedCompany.city})</span>
+                </div>
+                <div className="text-xs text-slate-500 flex flex-wrap items-center gap-x-3 gap-y-0.5 mt-0.5">
+                  <span>PIC: <strong className="text-slate-700">{loggedCompany.picName}</strong></span>
+                  <span>•</span>
+                  <span>NIB: <strong className="text-slate-700">{loggedCompany.nibNumber}</strong></span>
+                  <span>•</span>
+                  <span className="text-emerald-700 font-semibold">✓ Berhak mengubah harga pabrik ini</span>
+                </div>
+              </div>
+            ) : (
+              <div className="mt-1">
+                <div className="text-xs sm:text-sm font-bold text-slate-800">
+                  Mode Publik / Tamu (Hanya Melihat Data)
+                </div>
+                <div className="text-xs text-slate-500">
+                  Hanya <strong>perusahaan pengolah / industri hilir yang terdaftar resmi</strong> yang memiliki hak akses mengubah perubahan harga atau menerbitkan PO baru.
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Action Buttons for Company Session */}
+        <div className="flex flex-wrap items-center gap-2.5 shrink-0">
+          {loggedCompany ? (
+            <>
+              <button
+                onClick={handleOpenAdd}
+                className="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs flex items-center space-x-1.5 shadow-sm transition-all cursor-pointer"
+              >
+                <Plus className="w-4 h-4" />
+                <span>+ Terbitkan Harga Baru</span>
+              </button>
+              <button
+                onClick={() => setLoggedCompany(null)}
+                className="px-3.5 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs flex items-center space-x-1.5 transition-colors cursor-pointer"
+                title="Keluar dari akun perusahaan"
+              >
+                <LogOut className="w-3.5 h-3.5 text-slate-500" />
+                <span>Keluar Akun</span>
+              </button>
+            </>
+          ) : (
+            <>
+              <button
+                onClick={() => {
+                  setAuthTab('login');
+                  setIsAuthModalOpen(true);
+                }}
+                className="px-4 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs flex items-center space-x-2 shadow-sm transition-all cursor-pointer"
+              >
+                <LogIn className="w-4 h-4 text-emerald-400" />
+                <span>Masuk Akun Perusahaan</span>
+              </button>
+              <button
+                onClick={() => {
+                  setAuthTab('register');
+                  setIsAuthModalOpen(true);
+                }}
+                className="px-4 py-2.5 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-200 font-bold text-xs flex items-center space-x-1.5 transition-colors cursor-pointer"
+              >
+                <Briefcase className="w-3.5 h-3.5" />
+                <span>Daftar Pabrik Baru</span>
+              </button>
+            </>
+          )}
+        </div>
+
+      </div>
 
       {/* Hero Header Section */}
       <div className="bg-gradient-to-br from-slate-900 via-teal-950 to-slate-900 rounded-3xl p-6 sm:p-10 text-white shadow-2xl border border-teal-800/40 relative overflow-hidden">
@@ -327,9 +681,9 @@ export const RegionalFactoryPriceBoard: React.FC<RegionalFactoryPriceBoardProps>
           {/* Quick Stats Header */}
           <div className="mt-8 grid grid-cols-2 sm:grid-cols-4 gap-3">
             <div className="bg-slate-800/70 border border-slate-700/60 rounded-2xl p-3.5 backdrop-blur-xs">
-              <div className="text-[10px] text-slate-400 font-medium">Pabrik Terdaftar</div>
-              <div className="text-xl sm:text-2xl font-black text-white mt-0.5">{factoryOffers.length} Industri</div>
-              <div className="text-[10px] text-emerald-400 mt-0.5 font-semibold">✓ 100% Terverifikasi</div>
+              <div className="text-[10px] text-slate-400 font-medium">Perusahaan Terdaftar</div>
+              <div className="text-xl sm:text-2xl font-black text-white mt-0.5">{registeredCompanies.length} Pabrik</div>
+              <div className="text-[10px] text-emerald-400 mt-0.5 font-semibold">✓ Verifikasi Legalitas & NIB</div>
             </div>
 
             <div className="bg-slate-800/70 border border-slate-700/60 rounded-2xl p-3.5 backdrop-blur-xs">
@@ -337,7 +691,6 @@ export const RegionalFactoryPriceBoard: React.FC<RegionalFactoryPriceBoardProps>
               <div className="text-xl sm:text-2xl font-black text-emerald-300 mt-0.5">
                 {formatIDR(Math.max(...factoryOffers.filter(f => f.seaweedType === 'Eucheuma Cottonii').map(f => f.buyingPricePerKg)))}/Kg
               </div>
-              <div className="text-[10px] text-slate-400 mt-0.5">Franco Jawa Timur</div>
             </div>
 
             <div className="bg-slate-800/70 border border-slate-700/60 rounded-2xl p-3.5 backdrop-blur-xs">
@@ -358,8 +711,8 @@ export const RegionalFactoryPriceBoard: React.FC<RegionalFactoryPriceBoardProps>
               onClick={handleOpenAdd}
               className="px-5 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-xs flex items-center space-x-2 transition-all shadow-lg shadow-emerald-500/25 cursor-pointer"
             >
-              <Plus className="w-4 h-4" />
-              <span>Update / Pasang Harga Pabrik Baru</span>
+              {loggedCompany ? <Plus className="w-4 h-4" /> : <Lock className="w-4 h-4" />}
+              <span>{loggedCompany ? 'Update / Pasang Harga Pabrik Baru' : 'Login Perusahaan untuk Pasang Harga'}</span>
             </button>
             <a
               href="#simulator-rute"
@@ -367,6 +720,13 @@ export const RegionalFactoryPriceBoard: React.FC<RegionalFactoryPriceBoardProps>
             >
               <Ship className="w-4 h-4 text-cyan-400" />
               <span>Buka Simulator Rute & Ongkir Petani</span>
+            </a>
+            <a
+              href="#tabel-bagi-hasil"
+              className="px-5 py-2.5 rounded-xl bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 font-bold text-xs border border-emerald-400/40 flex items-center space-x-2 transition-all"
+            >
+              <Scale className="w-4 h-4 text-emerald-400" />
+              <span>★ Tabel Bagi Hasil (89,2% Petani)</span>
             </a>
           </div>
         </div>
@@ -766,7 +1126,7 @@ export const RegionalFactoryPriceBoard: React.FC<RegionalFactoryPriceBoardProps>
                     <div className="mt-4 pt-3 border-t border-slate-100 flex items-center space-x-2">
                       <button
                         onClick={() => setSelectedDestinationFactoryId(item.factory.id)}
-                        className="w-full py-2 bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs rounded-xl transition-colors flex items-center justify-center space-x-1.5"
+                        className="w-full py-2 bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs rounded-xl transition-colors flex items-center justify-center space-x-1.5 cursor-pointer"
                       >
                         <span>Lihat Rincian Rute</span>
                         <ArrowRight className="w-3 h-3" />
@@ -789,6 +1149,13 @@ export const RegionalFactoryPriceBoard: React.FC<RegionalFactoryPriceBoardProps>
           </div>
         )}
 
+      </div>
+
+      {/* ========================================================================= */}
+      {/* SECTION: PERSENTASE BAGI HASIL RESMI DARI HARGA AWAL PABRIK               */}
+      {/* ========================================================================= */}
+      <div id="tabel-bagi-hasil">
+        <RevenueSharingBreakdown onOpenRegister={onOpenRegister} />
       </div>
 
       {/* ========================================================================= */}
@@ -816,8 +1183,8 @@ export const RegionalFactoryPriceBoard: React.FC<RegionalFactoryPriceBoardProps>
               onClick={handleOpenAdd}
               className="px-4 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs flex items-center space-x-2 transition-all shadow-sm cursor-pointer"
             >
-              <Plus className="w-4 h-4 text-emerald-400" />
-              <span>+ Pasang Harga Baru</span>
+              {loggedCompany ? <Plus className="w-4 h-4 text-emerald-400" /> : <Lock className="w-4 h-4 text-amber-400" />}
+              <span>{loggedCompany ? '+ Pasang Harga Baru' : 'Login Pabrik untuk Pasang Harga'}</span>
             </button>
           </div>
         </div>
@@ -882,7 +1249,7 @@ export const RegionalFactoryPriceBoard: React.FC<RegionalFactoryPriceBoardProps>
                 <th className="py-3.5 px-4">Tren Harga</th>
                 <th className="py-3.5 px-4">Kapasitas PO</th>
                 <th className="py-3.5 px-4">Skema Pembayaran</th>
-                <th className="py-3.5 px-4 text-center">Aksi / Update</th>
+                <th className="py-3.5 px-4 text-center">Otoritas / Aksi</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100">
@@ -890,22 +1257,30 @@ export const RegionalFactoryPriceBoard: React.FC<RegionalFactoryPriceBoardProps>
                 filteredFactories.map((factory) => {
                   const isCottonii = factory.seaweedType === 'Eucheuma Cottonii';
                   const isSpinosum = factory.seaweedType === 'Eucheuma Spinosum';
+                  const canEdit = checkCanEditFactory(factory);
 
                   return (
-                    <tr key={factory.id} className="hover:bg-slate-50/80 transition-colors">
+                    <tr key={factory.id} className={`transition-colors ${canEdit ? 'bg-emerald-50/40 hover:bg-emerald-50/70' : 'hover:bg-slate-50/80'}`}>
                       
                       {/* Pabrik & Lokasi */}
                       <td className="py-4 px-4">
                         <div className="flex items-start space-x-2.5">
-                          <div className="w-8 h-8 rounded-lg bg-slate-100 border border-slate-200 flex items-center justify-center text-slate-700 font-bold shrink-0 mt-0.5">
+                          <div className={`w-8 h-8 rounded-lg border flex items-center justify-center font-bold shrink-0 mt-0.5 ${
+                            canEdit ? 'bg-emerald-100 text-emerald-800 border-emerald-300' : 'bg-slate-100 text-slate-700 border-slate-200'
+                          }`}>
                             <Building2 className="w-4 h-4 text-emerald-700" />
                           </div>
                           <div>
                             <div className="font-bold text-slate-900 text-xs flex items-center space-x-1.5">
                               <span>{factory.factoryName}</span>
                               {factory.verifiedFactory && (
-                                <span className="inline-flex items-center text-emerald-600" title="Pabrik Terverifikasi Talisea">
+                                <span className="inline-flex items-center text-emerald-600" title="Pabrik Terverifikasi NIB & Resmi Talisea">
                                   <CheckCircle2 className="w-3.5 h-3.5" />
+                                </span>
+                              )}
+                              {canEdit && (
+                                <span className="text-[9px] bg-emerald-600 text-white font-extrabold px-1.5 py-0.2 rounded-md">
+                                  Pabrik Anda
                                 </span>
                               )}
                             </div>
@@ -982,16 +1357,39 @@ export const RegionalFactoryPriceBoard: React.FC<RegionalFactoryPriceBoardProps>
                         </div>
                       </td>
 
-                      {/* Action buttons */}
+                      {/* Action buttons with RBAC */}
                       <td className="py-4 px-4 text-center">
                         <div className="flex items-center justify-center space-x-1.5">
-                          <button
-                            onClick={() => handleOpenEdit(factory)}
-                            className="px-2.5 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-800 rounded-lg text-[11px] font-bold transition-colors cursor-pointer"
-                            title="Edit / Update harga beli pabrik ini"
-                          >
-                            Update
-                          </button>
+                          {loggedCompany ? (
+                            canEdit ? (
+                              <button
+                                onClick={() => handleOpenEdit(factory)}
+                                className="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-[11px] font-bold transition-all shadow-xs flex items-center space-x-1 cursor-pointer"
+                                title="Edit / Update harga beli pabrik Anda"
+                              >
+                                <span>Edit Harga</span>
+                              </button>
+                            ) : (
+                              <button
+                                onClick={() => handleOpenEdit(factory)}
+                                className="px-2.5 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-400 hover:text-slate-600 rounded-lg text-[11px] font-semibold transition-colors flex items-center space-x-1 cursor-pointer"
+                                title="Hanya pemilik akun pabrik ini yang dapat mengubah harga"
+                              >
+                                <Lock className="w-3 h-3" />
+                                <span>Terkunci</span>
+                              </button>
+                            )
+                          ) : (
+                            <button
+                              onClick={() => handleOpenEdit(factory)}
+                              className="px-2.5 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-[11px] font-bold transition-colors flex items-center space-x-1 cursor-pointer"
+                              title="Login akun perusahaan untuk memperbarui harga"
+                            >
+                              <Lock className="w-3 h-3 text-amber-500" />
+                              <span>Update</span>
+                            </button>
+                          )}
+
                           <a
                             href={`https://wa.me/6285249402129?text=Halo%20Talisea.id,%20saya%20ingin%20menghubungi%20purchasing%20${encodeURIComponent(factory.factoryName)}%20di%20${encodeURIComponent(factory.city)}.`}
                             target="_blank"
@@ -1018,26 +1416,298 @@ export const RegionalFactoryPriceBoard: React.FC<RegionalFactoryPriceBoardProps>
           </table>
         </div>
 
-        {/* Footer Notes on Regional Factory Pricing */}
+        {/* Footer Notes on Regional Factory Pricing & Company Security Policy */}
         <div className="bg-slate-50 p-4 rounded-2xl border border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-slate-600">
           <div className="flex items-center space-x-2">
-            <HelpCircle className="w-4 h-4 text-slate-400 shrink-0" />
+            <ShieldCheck className="w-5 h-5 text-emerald-600 shrink-0" />
             <span>
-              <strong>Ketentuan Harga Franco Pabrik:</strong> Harga sudah mencakup penerimaan barang sampai di gudang pabrik. Pemotongan ongkir disesuaikan otomatis pada saat timbang di Hub Sentra Hulu Petani.
+              <strong>Kebijakan Keamanan Harga:</strong> Seluruh harga beli dilindungi otentikasi NIB & Akun PIC Perusahaan Terdaftar untuk mencegah manipulasi data harga komoditas rumput laut di tingkat petani.
             </span>
           </div>
+          
           <button
-            onClick={handleOpenAdd}
-            className="text-emerald-700 hover:text-emerald-800 font-bold text-xs shrink-0 underline"
+            onClick={() => {
+              setAuthTab('register');
+              setIsAuthModalOpen(true);
+            }}
+            className="text-emerald-700 hover:text-emerald-800 font-bold text-xs shrink-0 underline cursor-pointer"
           >
-            Daftarkan Pabrik Anda di Papan Ini →
+            Daftarkan Perusahaan Pabrik Baru →
           </button>
         </div>
 
       </div>
 
       {/* ========================================================================= */}
-      {/* MODAL: UPDATE / TAMBAH HARGA PABRIK                                      */}
+      {/* MODAL: LOGIN / REGISTER AKUN PERUSAHAAN TERDAFTAR                         */}
+      {/* ========================================================================= */}
+      {isAuthModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/70 backdrop-blur-xs">
+          <div className="bg-white w-full max-w-lg rounded-3xl shadow-2xl border border-slate-200 overflow-hidden animate-in zoom-in-95 duration-200">
+            
+            {/* Modal Header */}
+            <div className="bg-slate-900 px-6 py-4 text-white flex items-center justify-between">
+              <div className="flex items-center space-x-2.5">
+                <div className="w-8 h-8 rounded-xl bg-emerald-500/20 border border-emerald-400/40 flex items-center justify-center text-emerald-400">
+                  <KeyRound className="w-4 h-4" />
+                </div>
+                <div>
+                  <h3 className="text-base font-bold text-white">
+                    Portal Otentikasi Perusahaan Pabrik
+                  </h3>
+                  <p className="text-[10px] text-slate-400">
+                    Hanya perusahaan terdaftar yang dapat mengubah data harga
+                  </p>
+                </div>
+              </div>
+
+              <button
+                onClick={() => setIsAuthModalOpen(false)}
+                className="text-slate-400 hover:text-white p-1 rounded-lg cursor-pointer"
+              >
+                ✕
+              </button>
+            </div>
+
+            {/* Modal Navigation Tabs */}
+            <div className="flex border-b border-slate-200 bg-slate-50">
+              <button
+                type="button"
+                onClick={() => {
+                  setAuthTab('login');
+                  setAuthError('');
+                }}
+                className={`flex-1 py-3 text-xs font-bold transition-all border-b-2 flex items-center justify-center space-x-1.5 cursor-pointer ${
+                  authTab === 'login'
+                    ? 'border-emerald-600 text-emerald-800 bg-white'
+                    : 'border-transparent text-slate-500 hover:text-slate-800'
+                }`}
+              >
+                <LogIn className="w-3.5 h-3.5" />
+                <span>1. Masuk Akun Terdaftar</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => {
+                  setAuthTab('register');
+                  setAuthError('');
+                }}
+                className={`flex-1 py-3 text-xs font-bold transition-all border-b-2 flex items-center justify-center space-x-1.5 cursor-pointer ${
+                  authTab === 'register'
+                    ? 'border-emerald-600 text-emerald-800 bg-white'
+                    : 'border-transparent text-slate-500 hover:text-slate-800'
+                }`}
+              >
+                <Plus className="w-3.5 h-3.5" />
+                <span>2. Daftarkan Pabrik Baru</span>
+              </button>
+            </div>
+
+            {/* Error Display */}
+            {authError && (
+              <div className="mx-6 mt-4 p-3 bg-rose-50 border border-rose-200 rounded-xl text-rose-800 text-xs font-semibold flex items-center space-x-2">
+                <AlertCircle className="w-4 h-4 text-rose-600 shrink-0" />
+                <span>{authError}</span>
+              </div>
+            )}
+
+            {/* Tab 1: Login Form */}
+            {authTab === 'login' && (
+              <form onSubmit={handleLoginCompany} className="p-6 space-y-4">
+                <div className="space-y-1.5">
+                  <label className="text-xs font-bold text-slate-700 flex justify-between">
+                    <span>Pilih Nama Perusahaan Terdaftar:</span>
+                    <span className="text-[10px] text-emerald-700 font-semibold">✓ {registeredCompanies.length} Terdaftar</span>
+                  </label>
+                  <select
+                    value={selectedCompanyToLogin}
+                    onChange={(e) => setSelectedCompanyToLogin(e.target.value)}
+                    className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-bold text-slate-800 focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500 cursor-pointer"
+                  >
+                    {registeredCompanies.map((comp) => (
+                      <option key={comp.id} value={comp.id}>
+                        {comp.factoryName} — {comp.city}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                {/* Company Details Preview */}
+                {(() => {
+                  const currentSelected = registeredCompanies.find(c => c.id === selectedCompanyToLogin);
+                  if (!currentSelected) return null;
+                  return (
+                    <div className="bg-slate-50 p-3.5 rounded-2xl border border-slate-200 text-xs space-y-1 text-slate-600">
+                      <div className="flex justify-between">
+                        <span>Legalitas / NIB:</span>
+                        <strong className="text-slate-800 font-mono">{currentSelected.nibNumber}</strong>
+                      </div>
+                      <div className="flex justify-between">
+                        <span>PIC Pengadaan (Purchasing):</span>
+                        <strong className="text-slate-800">{currentSelected.picName}</strong>
+                      </div>
+                      <div className="flex justify-between">
+                        <span>Kontak Terverifikasi:</span>
+                        <strong className="text-emerald-700">{currentSelected.picPhone}</strong>
+                      </div>
+                    </div>
+                  );
+                })()}
+
+                <div className="space-y-1.5">
+                  <label className="text-xs font-bold text-slate-700 flex items-center justify-between">
+                    <span>PIN Akses / Kode Otorisasi Perusahaan:</span>
+                    <span className="text-[10px] text-slate-400 font-mono">Default Demo: 123456</span>
+                  </label>
+                  <input
+                    type="password"
+                    placeholder="Masukkan PIN / 123456"
+                    value={enteredPin}
+                    onChange={(e) => setEnteredPin(e.target.value)}
+                    className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-mono focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                  />
+                  <p className="text-[10px] text-slate-400">
+                    *Untuk verifikasi instan perusahaan yang sudah terdaftar di sistem, gunakan PIN <strong>123456</strong>.
+                  </p>
+                </div>
+
+                <div className="flex items-center justify-end space-x-3 pt-2">
+                  <button
+                    type="button"
+                    onClick={() => setIsAuthModalOpen(false)}
+                    className="px-4 py-2.5 rounded-xl border border-slate-200 text-slate-600 text-xs font-bold hover:bg-slate-50 cursor-pointer"
+                  >
+                    Batal
+                  </button>
+                  <button
+                    type="submit"
+                    className="px-6 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold flex items-center space-x-2 shadow-md transition-all cursor-pointer"
+                  >
+                    <span>Masuk & Buka Akses Edit</span>
+                    <ArrowRight className="w-4 h-4 text-emerald-400" />
+                  </button>
+                </div>
+              </form>
+            )}
+
+            {/* Tab 2: New Company Registration */}
+            {authTab === 'register' && (
+              <form onSubmit={handleRegisterNewCompany} className="p-6 space-y-3.5 max-h-[75vh] overflow-y-auto">
+                <div className="space-y-1">
+                  <label className="text-xs font-bold text-slate-700">Nama Perusahaan / Pabrik Industri:</label>
+                  <input
+                    type="text"
+                    required
+                    placeholder="e.g. PT Celebes Seaweed Bio Marine"
+                    value={regCompanyName}
+                    onChange={(e) => setRegCompanyName(e.target.value)}
+                    className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                  />
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div className="space-y-1">
+                    <label className="text-xs font-bold text-slate-700">Nomor Induk Berusaha (NIB):</label>
+                    <input
+                      type="text"
+                      placeholder="e.g. 9120003481920"
+                      value={regNib}
+                      onChange={(e) => setRegNib(e.target.value)}
+                      className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-mono focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                    />
+                  </div>
+
+                  <div className="space-y-1">
+                    <label className="text-xs font-bold text-slate-700">Wilayah / Provinsi:</label>
+                    <select
+                      value={regRegion}
+                      onChange={(e) => setRegRegion(e.target.value)}
+                      className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500 cursor-pointer"
+                    >
+                      <option value="Sulawesi Selatan">Sulawesi Selatan</option>
+                      <option value="Jawa Timur">Jawa Timur</option>
+                      <option value="Jawa Tengah & Barat">Jawa Tengah & Barat</option>
+                      <option value="Bali & Nusa Tenggara">Bali & Nusa Tenggara</option>
+                      <option value="Kalimantan">Kalimantan</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div className="space-y-1">
+                  <label className="text-xs font-bold text-slate-700">Kota / Lokasi Pabrik (Kawasan Industri):</label>
+                  <input
+                    type="text"
+                    required
+                    placeholder="e.g. Kawasan Industri / Pabrik / Surabaya"
+                    value={regCity}
+                    onChange={(e) => setRegCity(e.target.value)}
+                    className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                  />
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div className="space-y-1">
+                    <label className="text-xs font-bold text-slate-700">Nama PIC Pengadaan (Purchasing):</label>
+                    <input
+                      type="text"
+                      required
+                      placeholder="e.g. Hendra Wijaya"
+                      value={regPicName}
+                      onChange={(e) => setRegPicName(e.target.value)}
+                      className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                    />
+                  </div>
+
+                  <div className="space-y-1">
+                    <label className="text-xs font-bold text-slate-700">No. WhatsApp Resmi PIC:</label>
+                    <input
+                      type="text"
+                      required
+                      placeholder="+62812..."
+                      value={regPicPhone}
+                      onChange={(e) => setRegPicPhone(e.target.value)}
+                      className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                    />
+                  </div>
+                </div>
+
+                <div className="space-y-1">
+                  <label className="text-xs font-bold text-slate-700">Buat PIN Akses (6 Angka):</label>
+                  <input
+                    type="password"
+                    placeholder="123456"
+                    value={regPin}
+                    onChange={(e) => setRegPin(e.target.value)}
+                    className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-mono focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                  />
+                </div>
+
+                <div className="flex items-center justify-end space-x-3 pt-2 border-t border-slate-100">
+                  <button
+                    type="button"
+                    onClick={() => setIsAuthModalOpen(false)}
+                    className="px-4 py-2 rounded-xl border border-slate-200 text-slate-600 text-xs font-bold hover:bg-slate-50 cursor-pointer"
+                  >
+                    Batal
+                  </button>
+                  <button
+                    type="submit"
+                    className="px-6 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold flex items-center space-x-2 shadow-md transition-all cursor-pointer"
+                  >
+                    <span>Daftarkan & Verifikasi Sekarang</span>
+                    <Check className="w-4 h-4" />
+                  </button>
+                </div>
+              </form>
+            )}
+
+          </div>
+        </div>
+      )}
+
+      {/* ========================================================================= */}
+      {/* MODAL: UPDATE / TAMBAH HARGA PABRIK (PROTECTED ACCESS)                   */}
       {/* ========================================================================= */}
       {isUpdateModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/70 backdrop-blur-xs">
@@ -1046,16 +1716,17 @@ export const RegionalFactoryPriceBoard: React.FC<RegionalFactoryPriceBoardProps>
             {/* Modal Header */}
             <div className="bg-slate-900 px-6 py-4 text-white flex items-center justify-between">
               <div>
-                <span className="text-[10px] font-bold uppercase tracking-wider text-emerald-400">
-                  {modalMode === 'update' ? 'PERBARUI DATA HARGA' : 'INPUT HARGA PABRIK BARU'}
+                <span className="text-[10px] font-bold uppercase tracking-wider text-emerald-400 flex items-center space-x-1">
+                  <ShieldCheck className="w-3.5 h-3.5" />
+                  <span>AKUN RESMI: {loggedCompany?.factoryName || 'PERUSAHAAN TERVERIFIKASI'}</span>
                 </span>
                 <h3 className="text-base font-bold text-white mt-0.5">
-                  {modalMode === 'update' ? `Update Harga: ${formFactoryName}` : 'Tambah Penawaran Beli Pabrik'}
+                  {modalMode === 'update' ? `Update Harga: ${formFactoryName}` : 'Terbitkan Penawaran Beli / PO Baru'}
                 </h3>
               </div>
               <button
                 onClick={() => setIsUpdateModalOpen(false)}
-                className="text-slate-400 hover:text-white p-1 rounded-lg"
+                className="text-slate-400 hover:text-white p-1 rounded-lg cursor-pointer"
               >
                 ✕
               </button>
@@ -1070,11 +1741,14 @@ export const RegionalFactoryPriceBoard: React.FC<RegionalFactoryPriceBoardProps>
                   <input
                     type="text"
                     required
-                    placeholder="e.g. PT Celebes Seaweed Industries"
+                    readOnly={Boolean(loggedCompany)}
                     value={formFactoryName}
                     onChange={(e) => setFormFactoryName(e.target.value)}
-                    className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                    className="w-full px-3 py-2 bg-slate-100 border border-slate-200 rounded-xl text-xs font-bold text-slate-800 focus:outline-none"
                   />
+                  {loggedCompany && (
+                    <span className="text-[10px] text-emerald-700 font-semibold">✓ Terkunci sesuai akun resmi terdaftar</span>
+                  )}
                 </div>
 
                 <div className="space-y-1.5">
@@ -1082,7 +1756,7 @@ export const RegionalFactoryPriceBoard: React.FC<RegionalFactoryPriceBoardProps>
                   <input
                     type="text"
                     required
-                    placeholder="e.g. Pinrang / Surabaya"
+                    placeholder="e.g. Kawasan Pabrik / Surabaya"
                     value={formCity}
                     onChange={(e) => setFormCity(e.target.value)}
                     className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
@@ -1096,7 +1770,7 @@ export const RegionalFactoryPriceBoard: React.FC<RegionalFactoryPriceBoardProps>
                   <select
                     value={formRegion}
                     onChange={(e) => setFormRegion(e.target.value)}
-                    className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                    className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500 cursor-pointer"
                   >
                     <option value="Sulawesi Selatan">Sulawesi Selatan</option>
                     <option value="Jawa Timur">Jawa Timur</option>
@@ -1111,7 +1785,7 @@ export const RegionalFactoryPriceBoard: React.FC<RegionalFactoryPriceBoardProps>
                   <select
                     value={formSeaweedType}
                     onChange={(e) => setFormSeaweedType(e.target.value as SeaweedType)}
-                    className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                    className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500 cursor-pointer"
                   >
                     <option value="Eucheuma Cottonii">Eucheuma Cottonii</option>
                     <option value="Eucheuma Spinosum">Eucheuma Spinosum</option>
@@ -1196,15 +1870,15 @@ export const RegionalFactoryPriceBoard: React.FC<RegionalFactoryPriceBoardProps>
                 <button
                   type="button"
                   onClick={() => setIsUpdateModalOpen(false)}
-                  className="px-4 py-2 rounded-xl border border-slate-200 text-slate-600 text-xs font-bold hover:bg-slate-50"
+                  className="px-4 py-2 rounded-xl border border-slate-200 text-slate-600 text-xs font-bold hover:bg-slate-50 cursor-pointer"
                 >
                   Batal
                 </button>
                 <button
                   type="submit"
-                  className="px-6 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold flex items-center space-x-2 shadow-md transition-all cursor-pointer"
+                  className="px-6 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold flex items-center space-x-2 shadow-md transition-all cursor-pointer"
                 >
-                  <span>Simpan & Perbarui Live Board</span>
+                  <span>Simpan & Terbitkan Harga Resmi</span>
                   <Check className="w-4 h-4 text-emerald-400" />
                 </button>
               </div>

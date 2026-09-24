@@ -71,10 +71,10 @@ export const RegisterModal: React.FC<RegisterModalProps> = ({
               Pendaftaran Mitra Berhasil!
             </h3>
             <p className="text-xs sm:text-sm text-slate-600 leading-relaxed max-w-sm mx-auto">
-              Terima kasih, <strong>{formData.name || 'Mitra'}</strong>. Tim Field Officer Talisea.id wilayah {formData.location || 'Nunukan/Pinrang'} akan menghubungi Anda via WhatsApp ({formData.phone || 'kontak terdaftar'}) untuk verifikasi dan penjadwalan inspeksi timbang.
+              Terima kasih, <strong>{formData.name || 'Mitra'}</strong>. Tim Field Officer Talisea.id wilayah {formData.location || 'Petani/Pabrik'} akan menghubungi Anda via WhatsApp ({formData.phone || 'kontak terdaftar'}) untuk verifikasi dan penjadwalan inspeksi timbang.
             </p>
             <div className="p-3 bg-emerald-50 rounded-2xl border border-emerald-200 text-xs text-emerald-800 font-semibold">
-              Status Pendaftaran: <strong>Terverifikasi Masuk Pilot Koridor Nunukan - Pinrang</strong>
+              Status Pendaftaran: <strong>Terverifikasi Masuk Pilot Koridor Petani - Pabrik</strong>
             </div>
             <button
               onClick={handleReset}
@@ -92,7 +92,7 @@ export const RegisterModal: React.FC<RegisterModalProps> = ({
                 Pendaftaran Mitra Rantai Pasok
               </h2>
               <p className="text-xs text-slate-500">
-                Bergabung dalam ekosistem pasokan rumput laut terintegrasi Nunukan – Pinrang.
+                Bergabung dalam ekosistem pasokan rumput laut terintegrasi Petani – Pabrik.
               </p>
             </div>
 
@@ -189,7 +189,7 @@ export const RegisterModal: React.FC<RegisterModalProps> = ({
                     <input
                       type="text"
                       required
-                      placeholder="Contoh: Mamolo Nunukan / Suppa Pinrang"
+                      placeholder="Contoh: Sentra Petani / Gudang Pabrik"
                       value={formData.location}
                       onChange={(e) => setFormData({ ...formData, location: e.target.value })}
                       className="w-full pl-9 pr-3 py-2.5 rounded-xl border border-slate-200 text-xs focus:outline-none focus:ring-2 focus:ring-emerald-500"
@@ -236,7 +236,7 @@ export const RegisterModal: React.FC<RegisterModalProps> = ({
             <div className="p-3 rounded-xl bg-slate-50 border border-slate-200 text-[11px] text-slate-600 flex items-start space-x-2">
               <FileCheck className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
               <span>
-                <strong>Keuntungan Mitra:</strong> Jaminan penimbangan digital bersertifikat, bantuan logistik kapal rute Nunukan–Pinrang, dan pencairan pembayaran bertahap 80-90% saat timbang di gudang.
+                <strong>Keuntungan Mitra:</strong> Jaminan penimbangan digital bersertifikat, bantuan logistik kapal rute Petani–Pabrik, dan pencairan pembayaran bertahap 80-90% saat timbang di gudang.
               </span>
             </div>
 

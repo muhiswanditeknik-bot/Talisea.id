@@ -39,7 +39,7 @@ export const QCTestingSimulator: React.FC = () => {
     grade = 'Grade A (Standar Industri 35-37%)';
     priceAdj = 0;
     statusColor = 'text-teal-800 bg-teal-50 border-teal-300';
-    advice = 'Sesuai spesifikasi standar penerimaan pabrik Pinrang. Penimbangan 100% diterima penuh tanpa rafaksi.';
+    advice = 'Sesuai spesifikasi standar penerimaan Pabrik. Penimbangan 100% diterima penuh tanpa rafaksi.';
   } else if (moisture > 37.0 && moisture <= 40.0) {
     grade = 'Grade B (Lembab Sedang 38-40%)';
     priceAdj = -1200;
@@ -199,7 +199,7 @@ export const QCTestingSimulator: React.FC = () => {
                 ) : (
                   <AlertTriangle className="w-4 h-4 text-amber-600 shrink-0" />
                 )}
-                <span>Rekomendasi QC Officer Nunukan:</span>
+                <span>Rekomendasi QC Officer Sentra Petani:</span>
               </div>
               <p className="text-xs leading-relaxed font-medium">
                 {advice}
@@ -253,7 +253,7 @@ export const QCTestingSimulator: React.FC = () => {
                 <div>
                   <div className="text-[11px] font-bold text-emerald-300">Payout Tahap 1 (85%) Instan:</div>
                   <div className="text-lg font-black text-white">{formatIDR(payoutTahap1)}</div>
-                  <div className="text-[10px] text-emerald-200/80">Langsung cair di Hub Nunukan</div>
+                  <div className="text-[10px] text-emerald-200/80">Langsung cair di Hub Petani</div>
                 </div>
                 <CheckCircle2 className="w-6 h-6 text-emerald-400" />
               </div>
@@ -264,7 +264,7 @@ export const QCTestingSimulator: React.FC = () => {
                   <div className="text-[11px] font-semibold text-slate-400">Pelunasan Tahap 2 (15%):</div>
                   <div className="text-sm font-bold text-amber-300">{formatIDR(payoutTahap2)}</div>
                 </div>
-                <span className="text-[10px] text-slate-400">Saat QC Pabrik Pinrang</span>
+                <span className="text-[10px] text-slate-400">Saat QC Pabrik</span>
               </div>
             </div>
 

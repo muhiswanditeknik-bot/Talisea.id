@@ -17,11 +17,13 @@ import {
   Lock,
   Sparkles,
   Info,
-  Check
+  Check,
+  Percent
 } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { MARKETPLACE_PRODUCTS, FACTORY_DEMANDS } from '../data/mockData';
 import { MarketplaceProduct, SeaweedType, FactoryDemand } from '../types';
+import { RevenueSharingBreakdown } from './RevenueSharingBreakdown';
 
 interface MarketplaceViewProps {
   onOpenRegister: (role?: string) => void;
@@ -34,7 +36,7 @@ export const MarketplaceView: React.FC<MarketplaceViewProps> = ({ onOpenRegister
   const [selectedProduct, setSelectedProduct] = useState<MarketplaceProduct | null>(null);
   const [orderQuantityKg, setOrderQuantityKg] = useState<number>(2000);
   const [orderSuccess, setOrderSuccess] = useState<boolean>(false);
-  const [activeSubTab, setActiveSubTab] = useState<'katalog' | 'demand_pabrik'>('katalog');
+  const [activeSubTab, setActiveSubTab] = useState<'katalog' | 'demand_pabrik' | 'bagi_hasil'>('katalog');
 
   // Filtered Products
   const filteredProducts = MARKETPLACE_PRODUCTS.filter((prod) => {
@@ -82,7 +84,7 @@ export const MarketplaceView: React.FC<MarketplaceViewProps> = ({ onOpenRegister
                 <span>MARKETPLACE B2B RUMPUT LAUT TERKONSOLIDASI</span>
               </div>
               <h1 className="text-2xl sm:text-4xl font-extrabold tracking-tight">
-                Katalog Pasokan Petani Nunukan & Kebutuhan Pabrik Pinrang
+                Katalog Pasokan Petani & Kebutuhan Pabrik
               </h1>
               <p className="text-xs sm:text-sm text-slate-300">
                 Beli langsung dari kelompok tani dan hub terverifikasi dengan data kadar air (moisture) terukur dan jaminan pembayaran smart escrow.
@@ -108,7 +110,18 @@ export const MarketplaceView: React.FC<MarketplaceViewProps> = ({ onOpenRegister
                     : 'bg-white/10 text-white hover:bg-white/20'
                 }`}
               >
-                Kebutuhan (PO) Pabrik Pinrang
+                Kebutuhan (PO) Pabrik
+              </button>
+              <button
+                onClick={() => setActiveSubTab('bagi_hasil')}
+                className={`px-4 py-2.5 rounded-xl text-xs font-bold transition-all flex items-center space-x-1.5 ${
+                  activeSubTab === 'bagi_hasil'
+                    ? 'bg-emerald-500 text-slate-950 shadow-md font-black'
+                    : 'bg-emerald-500/20 text-emerald-300 hover:bg-emerald-500/30 border border-emerald-400/40'
+                }`}
+              >
+                <Percent className="w-3.5 h-3.5" />
+                <span>★ Bagi Hasil (89,2% Petani)</span>
               </button>
             </div>
           </div>
@@ -260,17 +273,17 @@ export const MarketplaceView: React.FC<MarketplaceViewProps> = ({ onOpenRegister
               ))}
             </div>
           </>
-        ) : (
+        ) : activeSubTab === 'demand_pabrik' ? (
           /* Factory Demands View */
           <div className="space-y-6">
             <div className="bg-white p-6 rounded-3xl border border-slate-200 shadow-xs">
               <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
                 <div>
                   <h3 className="text-lg font-extrabold text-slate-900">
-                    Permintaan Kontrak Aktif Pabrik Pengolahan (Pinrang & Sekitarnya)
+                    Permintaan Kontrak Aktif Pabrik Pengolahan (Kawasan Pabrik & Sekitarnya)
                   </h3>
                   <p className="text-xs text-slate-500 mt-0.5">
-                    Pabrik telah mengalokasikan budget escrow dan siap menyerap pasokan batch dari Nunukan
+                    Pabrik telah mengalokasikan budget escrow dan siap menyerap pasokan batch dari Sentra Petani
                   </p>
                 </div>
                 <button
@@ -336,17 +349,22 @@ export const MarketplaceView: React.FC<MarketplaceViewProps> = ({ onOpenRegister
                       </div>
 
                       <button
-                        onClick={() => onOpenRegister('hub_nunukan')}
+                        onClick={() => onOpenRegister('hub_petani')}
                         className="w-full py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs flex items-center justify-center space-x-1.5 cursor-pointer"
                       >
                         <Scale className="w-3.5 h-3.5" />
-                        <span>Supply Pasokan Batch Nunukan</span>
+                        <span>Supply Pasokan Batch Petani</span>
                       </button>
                     </div>
                   );
                 })}
               </div>
             </div>
+          </div>
+        ) : (
+          /* Bagi Hasil View */
+          <div className="animate-in fade-in duration-200">
+            <RevenueSharingBreakdown onOpenRegister={onOpenRegister} />
           </div>
         )}
 
@@ -432,27 +450,63 @@ export const MarketplaceView: React.FC<MarketplaceViewProps> = ({ onOpenRegister
                         </label>
                         <input
                           type="text"
-                          defaultValue="Gudang Pinrang, Sulsel"
+                          defaultValue="Gudang Pabrik, Sulsel"
                           className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium text-slate-900"
                           required
                         />
                       </div>
                     </div>
 
-                    {/* Escrow summary calculation */}
-                    <div className="bg-emerald-900 text-white p-4 rounded-2xl space-y-2">
-                      <div className="flex items-center justify-between text-xs text-emerald-200">
-                        <span>Subtotal ({orderQuantityKg.toLocaleString('id-ID')} Kg):</span>
-                        <span className="font-bold text-white">{formatIDR(orderQuantityKg * selectedProduct.hargaPerKg)}</span>
+                    {/* Escrow summary calculation with Full Revenue Sharing Breakdown */}
+                    <div className="bg-slate-900 text-white p-4 sm:p-5 rounded-2xl space-y-3 border border-emerald-500/40">
+                      <div className="flex items-center justify-between text-xs text-slate-300">
+                        <span>Volume Pesanan Kontrak:</span>
+                        <span className="font-bold text-white">{orderQuantityKg.toLocaleString('id-ID')} Kg ({ (orderQuantityKg / 1000).toFixed(1) } Ton)</span>
                       </div>
-                      <div className="flex items-center justify-between text-xs text-emerald-200">
-                        <span>Deposit Escrow Pabrik (100%):</span>
-                        <span className="font-black text-emerald-300 text-sm">
+                      <div className="flex items-center justify-between text-xs text-slate-300">
+                        <span>Harga Beli Pabrik (Franco Pabrik):</span>
+                        <span className="font-bold text-white">{formatIDR(selectedProduct.hargaPerKg)} / Kg (100%)</span>
+                      </div>
+                      <div className="flex items-center justify-between text-xs pb-2 border-b border-slate-700">
+                        <span className="text-emerald-400 font-bold">Total Deposit Escrow Pabrik (100%):</span>
+                        <span className="font-black text-emerald-300 text-base">
                           {formatIDR(orderQuantityKg * selectedProduct.hargaPerKg)}
                         </span>
                       </div>
-                      <div className="text-[10px] text-emerald-200 pt-1 border-t border-emerald-800">
-                        🔒 Dana dikunci di Talisea.id Smart Escrow. 85% dicairkan ke petani saat Hub Nunukan serah kargo, 15% dilunasi saat barang tiba di Pinrang.
+
+                      {/* Alokasi Transparansi Bagi Hasil dari Harga Awal */}
+                      <div className="bg-slate-950/80 p-3 rounded-xl border border-slate-800 space-y-1.5 text-[11px]">
+                        <div className="font-bold text-slate-300 text-[10px] uppercase tracking-wider text-emerald-400">
+                          Rincian Alokasi Bagi Hasil dari Harga Awal:
+                        </div>
+                        <div className="flex justify-between text-slate-300">
+                          <span>• Biaya Logistik & Transportasi (5,4%):</span>
+                          <span className="font-semibold text-rose-300">
+                            -{formatIDR(Math.round(orderQuantityKg * selectedProduct.hargaPerKg * 0.054))}
+                          </span>
+                        </div>
+                        <div className="flex justify-between text-slate-300">
+                          <span>• Fee Gudang Hub Tarakan / Sentra (2,7%):</span>
+                          <span className="font-semibold text-rose-300">
+                            -{formatIDR(Math.round(orderQuantityKg * selectedProduct.hargaPerKg * 0.027))}
+                          </span>
+                        </div>
+                        <div className="flex justify-between text-slate-300">
+                          <span>• Fee Platform Talisea.id (2,7%):</span>
+                          <span className="font-semibold text-rose-300">
+                            -{formatIDR(Math.round(orderQuantityKg * selectedProduct.hargaPerKg * 0.027))}
+                          </span>
+                        </div>
+                        <div className="pt-2 border-t border-slate-800 flex justify-between font-extrabold text-xs text-emerald-300">
+                          <span>★ Harga Terima Bersih Petani (89,2%):</span>
+                          <span className="text-sm font-black text-emerald-400">
+                            {formatIDR(Math.round(orderQuantityKg * selectedProduct.hargaPerKg * 0.892))}
+                          </span>
+                        </div>
+                      </div>
+
+                      <div className="text-[10px] text-emerald-200/90 leading-relaxed bg-emerald-950/50 p-2.5 rounded-lg border border-emerald-800/40">
+                        🔒 <strong>Smart Escrow Talisea:</strong> 85% dicairkan ke rekening petani saat Hub Petani serah kargo timbang, 15% dilunasi saat kargo tiba di pabrik.
                       </div>
                     </div>
 
@@ -485,7 +539,7 @@ export const MarketplaceView: React.FC<MarketplaceViewProps> = ({ onOpenRegister
                     Purchase Order Berhasil Dibuat!
                   </h3>
                   <p className="text-xs text-slate-600 max-w-md mx-auto leading-relaxed">
-                    Kontrak digital PO-TALI-{Math.floor(1000 + Math.random() * 9000)} telah dikirim ke Hub Konsolidasi Nunukan. Notifikasi WhatsApp & invoice resmi telah dikirim ke tim logistik.
+                    Kontrak digital PO-TALI-{Math.floor(1000 + Math.random() * 9000)} telah dikirim ke Hub Konsolidasi Petani. Notifikasi WhatsApp & invoice resmi telah dikirim ke tim logistik.
                   </p>
 
                   <div className="bg-slate-50 p-4 rounded-2xl border border-slate-200 text-left text-xs space-y-1 max-w-sm mx-auto">

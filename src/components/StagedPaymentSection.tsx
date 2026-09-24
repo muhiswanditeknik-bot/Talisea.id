@@ -11,7 +11,8 @@ import {
   AlertCircle, 
   Sparkles,
   Wallet,
-  ArrowDown
+  ArrowDown,
+  Percent
 } from 'lucide-react';
 
 export const StagedPaymentSection: React.FC = () => {
@@ -49,7 +50,7 @@ export const StagedPaymentSection: React.FC = () => {
           </h2>
           <p className="mt-4 text-sm sm:text-base text-slate-300 leading-relaxed">
             Pada sistem lama, petani harus menunggu 2–4 minggu hingga kapal sandar di Sulsel. Dengan Talisea.id Smart Escrow, 
-            <strong> 80–90% dana langsung cair saat timbang & lolos QC di Nunukan.</strong>
+            <strong> 80–90% dana langsung cair saat timbang & lolos QC di Hub Petani.</strong>
           </p>
         </div>
 
@@ -66,7 +67,7 @@ export const StagedPaymentSection: React.FC = () => {
             </div>
             <h4 className="text-base font-bold text-white mb-1">Pabrik Deposit Dana</h4>
             <p className="text-xs text-slate-300 leading-relaxed">
-              Off-taker di Pinrang mengunci dana kontrak (100%) ke Rekening Escrow Talisea.id sebelum pengiriman dimulai.
+              Off-taker Pabrik mengunci dana kontrak (100%) ke Rekening Escrow Talisea.id sebelum pengiriman dimulai.
             </p>
             <div className="mt-3 text-[11px] font-semibold text-blue-300">
               Dana aman 100% terkunci
@@ -81,7 +82,7 @@ export const StagedPaymentSection: React.FC = () => {
               </span>
               <Scale className="w-4 h-4 text-teal-400" />
             </div>
-            <h4 className="text-base font-bold text-white mb-1">QC & Timbang di Nunukan</h4>
+            <h4 className="text-base font-bold text-white mb-1">QC & Timbang di Hub Petani</h4>
             <p className="text-xs text-slate-300 leading-relaxed">
               Mitra Hub melakukan timbang digital dan tes kadar air moisture meter. Data diunggah ke platform.
             </p>
@@ -100,7 +101,7 @@ export const StagedPaymentSection: React.FC = () => {
             </div>
             <h4 className="text-base font-bold text-white mb-1">80–90% Payout Awal</h4>
             <p className="text-xs text-emerald-100 leading-relaxed">
-              Mayoritas pembayaran langsung ditransfer ke rekening / dompet petani saat barang masuk hub Nunukan.
+              Mayoritas pembayaran langsung ditransfer ke rekening / dompet petani saat barang masuk Hub Petani.
             </p>
             <div className="mt-3 text-[11px] font-bold text-emerald-400 flex items-center space-x-1">
               <CheckCircle2 className="w-3.5 h-3.5" />
@@ -118,7 +119,7 @@ export const StagedPaymentSection: React.FC = () => {
             </div>
             <h4 className="text-base font-bold text-white mb-1">10–20% Pelunasan</h4>
             <p className="text-xs text-slate-300 leading-relaxed">
-              Sisa pembayaran dicairkan penuh setelah kargo kapal tiba di Pinrang dan diverifikasi tim QC akhir pabrik.
+              Sisa pembayaran dicairkan penuh setelah kargo tiba di pabrik dan diverifikasi tim QC akhir pabrik.
             </p>
             <div className="mt-3 text-[11px] font-semibold text-amber-300">
               Pencatatan BAST & Rekonsiliasi
@@ -138,7 +139,7 @@ export const StagedPaymentSection: React.FC = () => {
                 </h3>
               </div>
               <p className="text-xs text-slate-400 mt-0.5">
-                Uji coba simulasi perhitungan dana yang diterima petani di Nunukan vs pelunasan pabrik di Pinrang
+                Uji coba simulasi perhitungan dana yang diterima petani di Sentra Petani vs pelunasan di Pabrik
               </p>
             </div>
 
@@ -180,23 +181,23 @@ export const StagedPaymentSection: React.FC = () => {
                 </div>
                 <input
                   type="range"
-                  min="14000"
-                  max="24000"
-                  step="200"
+                  min="10000"
+                  max="50000"
+                  step="500"
                   value={pricePerKg}
                   onChange={(e) => setPricePerKg(Number(e.target.value))}
                   className="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-emerald-500"
                 />
                 <div className="flex justify-between text-[10px] text-slate-500 mt-1">
-                  <span>Rp 14.000 (Spinosum)</span>
-                  <span>Rp 19.500 (Cottonii Standard)</span>
-                  <span>Rp 24.000 (Cottonii Super Low-Moisture)</span>
+                  <span>Rp 10.000</span>
+                  <span>Rp 30.000</span>
+                  <span>Rp 50.000</span>
                 </div>
               </div>
 
               <div>
                 <div className="flex justify-between text-xs font-semibold text-slate-300 mb-1.5">
-                  <span>Persentase Payout Awal (Hub Nunukan):</span>
+                  <span>Persentase Payout Awal (Hub Petani):</span>
                   <span className="text-cyan-300 font-bold text-sm">{upfrontPercent}%</span>
                 </div>
                 <div className="grid grid-cols-3 gap-2">
@@ -228,7 +229,7 @@ export const StagedPaymentSection: React.FC = () => {
                 </div>
                 <div className="text-right text-[11px] text-slate-400">
                   <span>Deposit Escrow</span>
-                  <div className="text-emerald-400 font-bold text-xs">Pabrik Pinrang</div>
+                  <div className="text-emerald-400 font-bold text-xs">Pabrik Mitra</div>
                 </div>
               </div>
 
@@ -238,7 +239,7 @@ export const StagedPaymentSection: React.FC = () => {
                   <div className="flex items-center space-x-2">
                     <span className="text-xs font-bold text-emerald-400">TAHAP 1: PAYOUT AWAL ({upfrontPercent}%)</span>
                     <span className="text-[10px] bg-emerald-500/30 text-emerald-200 px-2 py-0.5 rounded-full font-bold">
-                      Hari Ini di Nunukan
+                      Hari Ini di Hub Petani
                     </span>
                   </div>
                   <div className="text-2xl sm:text-3xl font-black text-emerald-300 mt-1">
@@ -263,7 +264,7 @@ export const StagedPaymentSection: React.FC = () => {
                     {formatIDR(payoutTahap2)}
                   </div>
                   <div className="text-[11px] text-slate-400 mt-1">
-                    ✓ Dicairkan setelah kontainer dibongkar di Pinrang & QC akhir tuntas.
+                    ✓ Dicairkan setelah kontainer dibongkar di gudang Pabrik & QC akhir tuntas.
                   </div>
                 </div>
               </div>
@@ -272,11 +273,20 @@ export const StagedPaymentSection: React.FC = () => {
 
           </div>
 
-          <div className="mt-6 pt-4 border-t border-slate-700/60 text-xs text-slate-400 flex items-center space-x-2">
-            <AlertCircle className="w-4 h-4 text-emerald-400 shrink-0" />
-            <span>
-              Catatan: Persentase 80-90% / 10-20% adalah skema percontohan hasil FGD Talisea.id (Nunukan-Pinrang) dan diikat dalam perjanjian jual beli digital tersertifikasi.
-            </span>
+          <div className="mt-6 pt-4 border-t border-slate-700/60 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs text-slate-400">
+            <div className="flex items-center space-x-2">
+              <AlertCircle className="w-4 h-4 text-emerald-400 shrink-0" />
+              <span>
+                Catatan: Persentase 80-90% / 10-20% adalah skema percontohan hasil FGD Talisea.id (Petani-Pabrik) dan diikat dalam perjanjian jual beli digital tersertifikasi.
+              </span>
+            </div>
+            <a
+              href="#transparansi-bagi-hasil-section"
+              className="shrink-0 px-3.5 py-1.5 rounded-xl bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 font-bold text-[11px] border border-emerald-400/40 flex items-center space-x-1.5 transition-all"
+            >
+              <Percent className="w-3.5 h-3.5 text-emerald-400" />
+              <span>Lihat Tabel Alokasi 89,2% Petani</span>
+            </a>
           </div>
         </div>
 

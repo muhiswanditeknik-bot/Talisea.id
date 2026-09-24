@@ -22,9 +22,8 @@ export const TaliseaLogo: React.FC<TaliseaLogoProps> = ({
 
   const currentSize = sizeMap[size];
 
-  const textColor = theme === 'white' ? 'text-white' : 'text-slate-900';
-  const taglineColor = theme === 'white' ? 'text-emerald-200' : 'text-slate-600';
-  const dotColor = theme === 'white' ? 'text-cyan-400' : 'text-emerald-600';
+  const isLight = theme === 'light';
+  const taglineColor = isLight ? 'text-slate-600' : 'text-emerald-200';
 
   return (
     <div className={`flex items-center space-x-3 select-none ${className}`}>
@@ -37,23 +36,23 @@ export const TaliseaLogo: React.FC<TaliseaLogoProps> = ({
       >
         <defs>
           <linearGradient id="leafGrad1" x1="20" y1="10" x2="60" y2="80" gradientUnits="userSpaceOnUse">
-            <stop offset="0%" stopColor="#10b981" />
-            <stop offset="50%" stopColor="#059669" />
-            <stop offset="100%" stopColor="#047857" />
-          </linearGradient>
-          <linearGradient id="leafGrad2" x1="40" y1="15" x2="80" y2="70" gradientUnits="userSpaceOnUse">
             <stop offset="0%" stopColor="#34d399" />
+            <stop offset="50%" stopColor="#10b981" />
             <stop offset="100%" stopColor="#059669" />
           </linearGradient>
+          <linearGradient id="leafGrad2" x1="40" y1="15" x2="80" y2="70" gradientUnits="userSpaceOnUse">
+            <stop offset="0%" stopColor="#6ee7b7" />
+            <stop offset="100%" stopColor="#10b981" />
+          </linearGradient>
           <linearGradient id="ropeGrad" x1="80" y1="30" x2="140" y2="80" gradientUnits="userSpaceOnUse">
-            <stop offset="0%" stopColor="#1e3a8a" />
-            <stop offset="50%" stopColor="#1e40af" />
-            <stop offset="100%" stopColor="#0f172a" />
+            <stop offset="0%" stopColor="#10b981" />
+            <stop offset="50%" stopColor="#059669" />
+            <stop offset="100%" stopColor="#065f46" />
           </linearGradient>
           <linearGradient id="transitionGrad" x1="50" y1="70" x2="110" y2="70" gradientUnits="userSpaceOnUse">
-            <stop offset="0%" stopColor="#047857" />
-            <stop offset="50%" stopColor="#0f766e" />
-            <stop offset="100%" stopColor="#1e3a8a" />
+            <stop offset="0%" stopColor="#059669" />
+            <stop offset="50%" stopColor="#10b981" />
+            <stop offset="100%" stopColor="#34d399" />
           </linearGradient>
         </defs>
 
@@ -84,35 +83,37 @@ export const TaliseaLogo: React.FC<TaliseaLogoProps> = ({
         {/* Twisted Marine Rope Ring (Right Loop) */}
         <g stroke="#ffffff" strokeWidth="1.2" strokeLinecap="round">
           {/* Rope strand 1 */}
-          <path d="M 112 55 C 114 42, 122 30, 136 32" stroke="#1e3a8a" strokeWidth="7" fill="none" />
-          <path d="M 114 48 L 118 43" stroke="#93c5fd" strokeWidth="2" />
-          <path d="M 120 38 L 125 35" stroke="#93c5fd" strokeWidth="2" />
-          <path d="M 128 32 L 134 31" stroke="#93c5fd" strokeWidth="2" />
+          <path d="M 112 55 C 114 42, 122 30, 136 32" stroke="#047857" strokeWidth="7" fill="none" />
+          <path d="M 114 48 L 118 43" stroke="#a7f3d0" strokeWidth="2" />
+          <path d="M 120 38 L 125 35" stroke="#a7f3d0" strokeWidth="2" />
+          <path d="M 128 32 L 134 31" stroke="#a7f3d0" strokeWidth="2" />
 
           {/* Rope strand top-to-right */}
-          <path d="M 136 32 C 148 34, 156 44, 154 58" stroke="#1e40af" strokeWidth="7" fill="none" />
-          <path d="M 142 34 L 146 39" stroke="#93c5fd" strokeWidth="2" />
-          <path d="M 149 43 L 152 49" stroke="#93c5fd" strokeWidth="2" />
-          <path d="M 153 52 L 153 58" stroke="#93c5fd" strokeWidth="2" />
+          <path d="M 136 32 C 148 34, 156 44, 154 58" stroke="#059669" strokeWidth="7" fill="none" />
+          <path d="M 142 34 L 146 39" stroke="#a7f3d0" strokeWidth="2" />
+          <path d="M 149 43 L 152 49" stroke="#a7f3d0" strokeWidth="2" />
+          <path d="M 153 52 L 153 58" stroke="#a7f3d0" strokeWidth="2" />
 
           {/* Rope strand bottom-right to inside */}
-          <path d="M 154 58 C 152 72, 140 82, 126 80" stroke="#0f172a" strokeWidth="7" fill="none" />
-          <path d="M 151 64 L 146 68" stroke="#93c5fd" strokeWidth="2" />
-          <path d="M 143 72 L 137 75" stroke="#93c5fd" strokeWidth="2" />
-          <path d="M 134 78 L 127 79" stroke="#93c5fd" strokeWidth="2" />
+          <path d="M 154 58 C 152 72, 140 82, 126 80" stroke="#064e3b" strokeWidth="7" fill="none" />
+          <path d="M 151 64 L 146 68" stroke="#a7f3d0" strokeWidth="2" />
+          <path d="M 143 72 L 137 75" stroke="#a7f3d0" strokeWidth="2" />
+          <path d="M 134 78 L 127 79" stroke="#a7f3d0" strokeWidth="2" />
 
           {/* Rope loop inner crossover */}
-          <path d="M 126 80 C 114 78, 108 68, 112 55" stroke="#1e3a8a" strokeWidth="7" fill="none" />
-          <path d="M 122 79 L 117 74" stroke="#93c5fd" strokeWidth="2" />
-          <path d="M 114 70 L 111 63" stroke="#93c5fd" strokeWidth="2" />
-          <path d="M 110 60 L 112 54" stroke="#93c5fd" strokeWidth="2" />
+          <path d="M 126 80 C 114 78, 108 68, 112 55" stroke="#047857" strokeWidth="7" fill="none" />
+          <path d="M 122 79 L 117 74" stroke="#a7f3d0" strokeWidth="2" />
+          <path d="M 114 70 L 111 63" stroke="#a7f3d0" strokeWidth="2" />
+          <path d="M 110 60 L 112 54" stroke="#a7f3d0" strokeWidth="2" />
         </g>
       </svg>
 
-      {/* Typography */}
+      {/* Typography: Kombinasi Hijau & Putih */}
       <div className="flex flex-col">
-        <div className={`font-black tracking-tight leading-none ${currentSize.text} ${textColor}`}>
-          TALISEA<span className={dotColor}>.ID</span>
+        <div className={`font-black tracking-tight leading-none ${currentSize.text}`}>
+          <span className="text-emerald-400 font-black drop-shadow-xs">TALI</span>
+          <span className={isLight ? 'text-slate-900 font-black' : 'text-white font-black drop-shadow-xs'}>SEA</span>
+          <span className="text-emerald-400 font-black drop-shadow-xs">.ID</span>
         </div>
         {showTagline && (
           <p className={`font-extrabold uppercase tracking-wider mt-1 ${currentSize.sub} ${taglineColor}`}>

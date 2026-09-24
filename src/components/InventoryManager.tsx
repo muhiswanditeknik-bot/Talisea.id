@@ -43,7 +43,7 @@ export const InventoryManager: React.FC<InventoryManagerProps> = ({ onOpenReceip
   // Form states for adding new batch
   const [newPetaniName, setNewPetaniName] = useState('');
   const [newPetaniPhone, setNewPetaniPhone] = useState('+628');
-  const [newLokasiTali, setNewLokasiTali] = useState('Perairan Mamolo, Nunukan');
+  const [newLokasiTali, setNewLokasiTali] = useState('Perairan Mamolo, Sentra Petani');
   const [newBentangan, setNewBentangan] = useState<number>(100);
   const [newJenis, setNewJenis] = useState<SeaweedType>('Eucheuma Cottonii');
   const [newBeratBasah, setNewBeratBasah] = useState<number>(7500);
@@ -53,7 +53,7 @@ export const InventoryManager: React.FC<InventoryManagerProps> = ({ onOpenReceip
   const [qcWeightKg, setQcWeightKg] = useState<number>(1200);
   const [qcMoisture, setQcMoisture] = useState<number>(35.2);
   const [qcImpurity, setQcImpurity] = useState<number>(1.9);
-  const [qcInspector, setQcInspector] = useState('Ilyas R. (QC Nunukan)');
+  const [qcInspector, setQcInspector] = useState('Ilyas R. (QC Lapangan Petani)');
 
   const formatIDR = (val: number) => {
     return new Intl.NumberFormat('id-ID', {
@@ -127,11 +127,11 @@ export const InventoryManager: React.FC<InventoryManagerProps> = ({ onOpenReceip
       payoutTahap2: p2,
       statusTahap1: 'pending',
       statusTahap2: 'pending',
-      hubLokasi: 'Hub Posko Agregator Mamolo, Nunukan',
+      hubLokasi: 'Hub Posko Agregator Mamolo (Sentra Petani)',
       hubInspector: 'Menunggu Pengujian',
-      tujuanPabrik: 'PT Celebes Seaweed Industries - Pinrang',
+      tujuanPabrik: 'PT Celebes Seaweed Industries (Pabrik)',
       status: 'terdaftar',
-      catatan: 'Permintaan penjemputan armada perahu hub lokal Nunukan'
+      catatan: 'Permintaan penjemputan armada perahu hub lokal sentra petani'
     };
 
     setBatches([newBatch, ...batches]);
@@ -222,7 +222,7 @@ export const InventoryManager: React.FC<InventoryManagerProps> = ({ onOpenReceip
       case 'tersimpan_hub':
         return <span className="px-2 py-0.5 rounded-md text-[10px] font-bold bg-blue-100 text-blue-800">Konsolidasi Gudang</span>;
       case 'loading_kapal':
-        return <span className="px-2 py-0.5 rounded-md text-[10px] font-bold bg-cyan-100 text-cyan-800">Muat Kapal Nunukan</span>;
+        return <span className="px-2 py-0.5 rounded-md text-[10px] font-bold bg-cyan-100 text-cyan-800">Muat Kapal Petani</span>;
       case 'pelayaran_midmile':
         return <span className="px-2 py-0.5 rounded-md text-[10px] font-bold bg-indigo-100 text-indigo-800">Pelayaran Kargo Laut</span>;
       case 'tiba_pelabuhan_tujuan':
@@ -246,13 +246,13 @@ export const InventoryManager: React.FC<InventoryManagerProps> = ({ onOpenReceip
           <div>
             <div className="flex items-center space-x-2 text-xs font-bold text-emerald-700 uppercase tracking-wider mb-1">
               <Warehouse className="w-4 h-4" />
-              <span>Sistem Manajemen Inventaris & Hub Agregator Nunukan</span>
+              <span>Sistem Manajemen Inventaris & Hub Agregator Petani</span>
             </div>
             <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
               Manajemen Lot Panen, QC Timbangan & Payout Petani
             </h1>
             <p className="text-xs text-slate-500 mt-0.5">
-              Pencatatan digital dari bentangan tali laut hingga kontainer kargo laut ke Pinrang
+              Pencatatan digital dari bentangan tali laut hingga kontainer kargo laut ke Pabrik
             </p>
           </div>
 
@@ -292,7 +292,7 @@ export const InventoryManager: React.FC<InventoryManagerProps> = ({ onOpenReceip
               {formatIDR(totalPayout1)}
             </div>
             <div className="text-[11px] text-slate-500 font-medium mt-1">
-              85% dibayar di hari timbang Nunukan
+              85% dibayar di hari timbang di Hub Petani
             </div>
           </div>
 
@@ -305,7 +305,7 @@ export const InventoryManager: React.FC<InventoryManagerProps> = ({ onOpenReceip
               {totalInVoyage} <span className="text-sm font-semibold text-slate-500">Batch</span>
             </div>
             <div className="text-[11px] text-slate-500 font-medium mt-1">
-              Rute Nunukan ➔ Parepare/Pinrang
+              Rute Petani ➔ Parepare/Pabrik
             </div>
           </div>
 
@@ -512,7 +512,7 @@ export const InventoryManager: React.FC<InventoryManagerProps> = ({ onOpenReceip
                   </div>
                   <div>
                     <h3 className="text-base font-extrabold text-slate-900">Pendaftaran Panen Petani Baru</h3>
-                    <p className="text-[11px] text-slate-500">Pilot Nunukan: First-mile pickup request</p>
+                    <p className="text-[11px] text-slate-500">Pilot Sentra Petani: First-mile pickup request</p>
                   </div>
                 </div>
                 <button 
@@ -559,11 +559,11 @@ export const InventoryManager: React.FC<InventoryManagerProps> = ({ onOpenReceip
                       onChange={(e) => setNewLokasiTali(e.target.value)}
                       className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium focus:bg-white focus:outline-none"
                     >
-                      <option value="Mamolo, Nunukan Selatan">Mamolo, Nunukan Selatan</option>
+                      <option value="Mamolo, Sentra Petani">Mamolo, Sentra Petani</option>
                       <option value="Sebatik Timur, Perbatasan">Sebatik Timur, Perbatasan</option>
-                      <option value="Mansapa, Nunukan Selatan">Mansapa, Nunukan Selatan</option>
-                      <option value="Tanjung Ahus, Nunukan">Tanjung Ahus, Nunukan</option>
-                      <option value="Tanjung Cantik, Nunukan">Tanjung Cantik, Nunukan</option>
+                      <option value="Mansapa, Sentra Petani">Mansapa, Sentra Petani</option>
+                      <option value="Tanjung Ahus, Sentra Petani">Tanjung Ahus, Sentra Petani</option>
+                      <option value="Tanjung Cantik, Sentra Petani">Tanjung Cantik, Sentra Petani</option>
                     </select>
                   </div>
 
@@ -620,7 +620,7 @@ export const InventoryManager: React.FC<InventoryManagerProps> = ({ onOpenReceip
                 <div className="bg-emerald-50 p-3 rounded-xl border border-emerald-200 text-xs text-emerald-800 space-y-1">
                   <div className="font-bold flex items-center space-x-1">
                     <Sparkles className="w-3.5 h-3.5 text-emerald-600" />
-                    <span>Layanan Penjemputan Hub Nunukan:</span>
+                    <span>Layanan Penjemputan Hub Petani:</span>
                   </div>
                   <p className="text-[11px] text-slate-600">
                     Armada perahu/pickup hub akan menjemput ke lokasi penjemuran petani, melakukan timbang digital di tempat, dan menerbitkan nota timbang.
@@ -759,7 +759,7 @@ export const InventoryManager: React.FC<InventoryManagerProps> = ({ onOpenReceip
                         <span className="font-black text-emerald-400 text-base">{formatIDR(p1)}</span>
                       </div>
                       <div className="text-[10px] text-slate-400">
-                        * Dana Tahap 1 langsung cair ke petani begitu QC disimpan. Sisa 15% ({formatIDR(p2)}) cair saat tiba di Pinrang.
+                        * Dana Tahap 1 langsung cair ke petani begitu QC disimpan. Sisa 15% ({formatIDR(p2)}) cair saat tiba di pabrik.
                       </div>
                     </div>
                   );

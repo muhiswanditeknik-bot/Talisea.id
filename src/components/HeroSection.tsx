@@ -14,7 +14,8 @@ import {
   Clock,
   Sparkles,
   MapPin,
-  Building2
+  Building2,
+  Percent
 } from 'lucide-react';
 import { TaliseaLogo } from './TaliseaLogo';
 
@@ -35,8 +36,8 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ setActiveTab, onOpenRe
         
         {/* Official Brand Logo Showcase in Hero */}
         <div className="flex flex-col items-center justify-center mb-6 text-center">
-          <div className="bg-white/10 backdrop-blur-md px-6 py-3 rounded-3xl border border-white/15 shadow-xl mb-4">
-            <TaliseaLogo variant="full" theme="dark" size="lg" />
+          <div className="bg-slate-950/80 backdrop-blur-md px-6 py-3.5 rounded-3xl border border-emerald-500/30 shadow-2xl mb-4">
+            <TaliseaLogo theme="white" size="lg" showTagline={true} />
           </div>
 
           {/* Tagline Badges */}
@@ -95,6 +96,21 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ setActiveTab, onOpenRe
             >
               <Scale className="w-4 h-4 text-cyan-400" />
               <span>Simulator QC</span>
+            </button>
+
+            <button
+              onClick={() => {
+                const el = document.getElementById('transparansi-bagi-hasil-section');
+                if (el) {
+                  el.scrollIntoView({ behavior: 'smooth' });
+                } else {
+                  setActiveTab('calculator');
+                }
+              }}
+              className="w-full sm:w-auto px-6 py-4 rounded-2xl bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 font-extrabold text-sm sm:text-base border border-emerald-400/50 flex items-center justify-center space-x-2.5 backdrop-blur-md transition-all cursor-pointer shadow-lg shadow-emerald-950/40"
+            >
+              <Percent className="w-4 h-4 text-emerald-400" />
+              <span>★ Bagi Hasil 89,2% Petani</span>
             </button>
           </div>
         </div>
@@ -172,9 +188,9 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ setActiveTab, onOpenRe
         <div className="mt-12 p-6 rounded-2xl bg-gradient-to-r from-emerald-950/80 via-slate-900/90 to-teal-950/80 border border-emerald-500/30 backdrop-blur-md">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
             <div>
-              <div className="text-2xl sm:text-3xl font-extrabold text-emerald-400">+22.4%</div>
-              <div className="text-xs text-slate-300 mt-1 font-medium">Kenaikan Margin Petani</div>
-              <div className="text-[10px] text-slate-400">vs Tengkulak Konvensional</div>
+              <div className="text-2xl sm:text-3xl font-extrabold text-emerald-400">89,2%</div>
+              <div className="text-xs text-slate-300 mt-1 font-medium">Diterima Bersih Petani</div>
+              <div className="text-[10px] text-slate-400">dari Harga Beli Pabrik</div>
             </div>
             <div>
               <div className="text-2xl sm:text-3xl font-extrabold text-cyan-400">&lt; 4 Jam</div>

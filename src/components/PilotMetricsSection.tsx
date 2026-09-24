@@ -94,9 +94,9 @@ export const PilotMetricsSection: React.FC<PilotMetricsProps> = ({ onOpenRegiste
       color: 'emerald'
     },
     {
-      metric: 'Total Biaya Logistik & Handling / kg',
+      metric: 'Biaya Logistik, Admin & Gudang Hub',
       result: PILOT_KPI_DATA.biayaLogistikKg,
-      desc: 'Termasuk pickup, timbang, pengarungan, kargo laut, & trucking pabrik',
+      desc: 'Biaya logistik/Handling 5,4%, admin 2,7% dan Gudang hub 2,7% dari Harga pabrik',
       color: 'teal'
     },
     {
@@ -243,7 +243,7 @@ export const PilotMetricsSection: React.FC<PilotMetricsProps> = ({ onOpenRegiste
               >
                 <div>
                   <div className="text-xs font-semibold text-slate-500 mb-1">{item.metric}</div>
-                  <div className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight text-emerald-800">
+                  <div className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight text-emerald-800 leading-snug">
                     {item.result}
                   </div>
                 </div>

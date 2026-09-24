@@ -6,11 +6,11 @@ export type BatchStatus =
   | 'terdaftar'           // Petani baru input panen
   | 'dijemput_hub'        // Armada Hub jemput di bentangan / lokasi jemur
   | 'qc_timbang_selesai'  // Selesai timbang digital & moisture test di Hub
-  | 'tersimpan_hub'       // Konsolidasi dalam gudang Hub Nunukan
-  | 'loading_kapal'       // Muat di Pelabuhan Tunon Taka Nunukan
+  | 'tersimpan_hub'       // Konsolidasi dalam gudang Hub Petani
+  | 'loading_kapal'       // Muat di Pelabuhan Tunon Taka Petani
   | 'pelayaran_midmile'   // Dalam pelayaran laut ke Sulsel
   | 'tiba_pelabuhan_tujuan'// Tiba di Pelabuhan Parepare / Makassar
-  | 'trucking_lastmile'   // Diantar trucking ke pabrik di Pinrang
+  | 'trucking_lastmile'   // Diantar trucking ke Pabrik
   | 'qc_pabrik_selesai'   // QC penerimaan pabrik selesai
   | 'lunas_selesai';      // Pembayaran tahap 2 cair penuh
 
@@ -19,7 +19,7 @@ export interface SeaweedBatch {
   batchNumber: string;
   petaniName: string;
   petaniPhone: string;
-  lokasiTali: string; // e.g. 'Mamolo, Nunukan Selatan'
+  lokasiTali: string; // e.g. 'Mamolo, Sentra Petani'
   jumlahBentangan: number;
   jenisRumputLaut: SeaweedType;
   tanggalPanen: string;
@@ -68,7 +68,7 @@ export interface MarketplaceProduct {
 export interface FactoryDemand {
   id: string;
   factoryName: string;
-  lokasi: string; // e.g. 'Pinrang, Sulawesi Selatan'
+  lokasi: string; // e.g. 'Kawasan Pabrik, Sulawesi Selatan'
   kebutuhanJenis: SeaweedType;
   volumeTargetKg: number;
   volumeTerkumpulKg: number;
@@ -83,9 +83,9 @@ export interface LogisticsRoute {
   id: string;
   namaKapal: string;
   nomorKontainer: string;
-  asal: string; // Nunukan
+  asal: string; // Petani
   transit: string; // Tarakan / Parepare
-  tujuan: string; // Pabrik Pinrang
+  tujuan: string; // Gudang Pabrik
   totalMuatanKg: number;
   etd: string;
   eta: string;
@@ -109,7 +109,7 @@ export interface FactoryPriceOffer {
   id: string;
   factoryName: string;
   region: string; // e.g. 'Sulawesi Selatan', 'Jawa Timur', 'Jawa Tengah & Barat', 'Bali & Nusa Tenggara', 'Kalimantan'
-  city: string; // e.g. 'Pinrang', 'Makassar', 'Surabaya', 'Pasuruan', 'Cirebon', 'Denpasar'
+  city: string; // e.g. 'Kawasan Pabrik', 'Makassar', 'Surabaya', 'Pasuruan', 'Cirebon', 'Denpasar'
   seaweedType: SeaweedType;
   gradeRequirement: QualityGrade;
   maxMoisturePercent: number;

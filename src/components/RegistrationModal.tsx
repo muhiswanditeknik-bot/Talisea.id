@@ -6,12 +6,13 @@ import {
   Scale, 
   Ship, 
   Building2, 
-  ArrowRight,
-  ShieldCheck,
+  ArrowRight, 
+  ShieldCheck, 
   Send
 } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { TaliseaLogo } from './TaliseaLogo';
+import { RegistrationData } from '../lib/googleSheetsService';
 
 interface RegistrationModalProps {
   isOpen: boolean;
@@ -24,27 +25,103 @@ export const RegistrationModal: React.FC<RegistrationModalProps> = ({
   onClose,
   initialRole = 'petani'
 }) => {
-  const [selectedRole, setSelectedRole] = useState<string>(initialRole);
+  const [selectedRole, setSelectedRole] = useState<'petani' | 'hub_sentra' | 'ekspedisi' | 'pabrik'>(
+    (initialRole as 'petani' | 'hub_sentra' | 'ekspedisi' | 'pabrik') || 'petani'
+  );
   const [fullName, setFullName] = useState('');
   const [phone, setPhone] = useState('+628');
   const [location, setLocation] = useState('Sentra Pesisir Mamolo');
   const [capacity, setCapacity] = useState('100 Bentangan Tali (1-2 Ton/Bulan)');
   const [notes, setNotes] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
 
   if (!isOpen) return null;
 
-  const roleOptions = [
+  const roleOptions: {
+    id: 'petani' | 'hub_sentra' | 'ekspedisi' | 'pabrik';
+    label: string;
+    icon: typeof Anchor;
+    sub: string;
+  }[] = [
     { id: 'petani', label: 'Petani Rumput Laut', icon: Anchor, sub: 'Sentra Budidaya Pesisir' },
     { id: 'hub_sentra', label: 'Mitra Hub Agregasi', icon: Scale, sub: 'Gudang & Timbangan Digital' },
     { id: 'ekspedisi', label: 'Ekspedisi Kargo Laut', icon: Ship, sub: 'Kargo Koridor Laut Antarpulau' },
     { id: 'pabrik', label: 'Pabrik Pengolah Hilir', icon: Building2, sub: 'Off-Taker Industri' }
   ];
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const roleLabels: Record<string, string> = {
+    petani: 'Petani Rumput Laut (Sentra Pesisir)',
+    hub_sentra: 'Mitra Hub Agregasi & Timbang Digital',
+    ekspedisi: 'Mitra Ekspedisi Kargo Laut',
+    pabrik: 'Pabrik Pengolah Hilir / Off-Taker Industri'
+  };
+
+  const generateWhatsAppUrl = () => {
+    const roleText = roleLabels[selectedRole] || selectedRole;
+    const registrationId = `REG-${Date.now().toString().slice(-6)}`;
+    const timestamp = new Date().toLocaleString('id-ID', { dateStyle: 'medium', timeStyle: 'short' });
+
+    const message = `Halo Admin Talisea.id (+6285249402129),
+
+Saya ingin mendaftarkan kemitraan ekosistem baru di platform Talisea.id:
+
+📋 *DETAIL FORMULIR PENDAFTARAN MITRA*
+• *No. Registrasi*: ${registrationId}
+• *Tanggal*: ${timestamp}
+• *Peran Kemitraan*: ${roleText}
+• *Nama Lengkap / PIC*: ${fullName}
+• *Nomor WhatsApp*: ${phone}
+• *Domisili / Lokasi*: ${location}
+• *Estimasi Kapasitas / Bentangan*: ${capacity}
+• *Catatan / Keterangan*: ${notes.trim() ? notes : '-'}
+
+Mohon verifikasi pendaftaran saya dan koordinasi jadwal penjemputan/kemitraan selanjutnya. Terima kasih!`;
+
+    return `https://wa.me/6285249402129?text=${encodeURIComponent(message)}`;
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setIsSubmitting(true);
+
+    const record: RegistrationData = {
+      id: `REG-${Date.now().toString().slice(-6)}`,
+      role: selectedRole,
+      fullName,
+      phone,
+      location,
+      capacity,
+      notes,
+      createdAt: new Date().toISOString()
+    };
+
+    // Save to local storage for persistence
+    try {
+      const existing = JSON.parse(localStorage.getItem('talisea_partner_registrations') || '[]');
+      existing.unshift(record);
+      localStorage.setItem('talisea_partner_registrations', JSON.stringify(existing));
+    } catch {
+      // ignore
+    }
+
+    // Open WhatsApp link
+    const waUrl = generateWhatsAppUrl();
+    try {
+      const link = document.createElement('a');
+      link.href = waUrl;
+      link.target = '_blank';
+      link.rel = 'noopener noreferrer';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    } catch {
+      // Fallback if click blocked
+    }
+
+    setIsSubmitting(false);
     setIsSuccess(true);
-    confetti({ particleCount: 70, spread: 60 });
+    confetti({ particleCount: 75, spread: 65 });
   };
 
   return (
@@ -53,10 +130,12 @@ export const RegistrationModal: React.FC<RegistrationModalProps> = ({
         
         {/* Header */}
         <div className="flex items-center justify-between border-b border-slate-100 pb-4 mb-6">
-          <TaliseaLogo size="sm" showTagline={false} />
+          <div className="bg-slate-950 px-3 py-1.5 rounded-xl flex items-center border border-slate-800 shadow-2xs">
+            <TaliseaLogo size="sm" showTagline={false} theme="white" />
+          </div>
           <button 
             onClick={onClose}
-            className="p-1.5 text-slate-400 hover:text-slate-700 rounded-lg hover:bg-slate-100"
+            className="p-1.5 text-slate-400 hover:text-slate-700 rounded-lg hover:bg-slate-100 cursor-pointer"
           >
             <X className="w-5 h-5" />
           </button>
@@ -64,25 +143,25 @@ export const RegistrationModal: React.FC<RegistrationModalProps> = ({
 
         {!isSuccess ? (
           <div>
-            <div className="mb-6">
-              <span className="text-[10px] font-extrabold uppercase tracking-wider text-emerald-600 bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-200">
+            <div className="mb-5">
+              <span className="text-[10px] font-extrabold uppercase tracking-wider text-emerald-700 bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-200">
                 KORIDOR RANTAI PASOK TERPADU
               </span>
               <h2 className="text-xl font-extrabold text-slate-900 mt-2">
                 Pendaftaran Kemitraan Ekosistem
               </h2>
-              <p className="text-xs text-slate-500 mt-0.5">
-                Bergabunglah ke dalam rantai pasok terintegrasi Talisea.id untuk kepastian harga, digital QC, dan pembayaran lancar.
-              </p>
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-4">
               
               {/* Role Picker */}
               <div>
-                <label className="block text-xs font-bold text-slate-700 mb-2">
-                  Pilih Peran Anda dalam Ekosistem:
-                </label>
+                <div className="flex items-center justify-between mb-2">
+                  <label className="block text-xs font-bold text-slate-700">
+                    Pilih Peran Anda dalam Ekosistem:
+                  </label>
+                </div>
+
                 <div className="grid grid-cols-2 gap-2">
                   {roleOptions.map((r) => {
                     const Icon = r.icon;
@@ -92,7 +171,7 @@ export const RegistrationModal: React.FC<RegistrationModalProps> = ({
                         key={r.id}
                         type="button"
                         onClick={() => setSelectedRole(r.id)}
-                        className={`p-3 rounded-2xl border text-left transition-all flex items-center space-x-2.5 ${
+                        className={`p-3 rounded-2xl border text-left transition-all flex items-center space-x-2.5 cursor-pointer ${
                           isSelected
                             ? 'bg-slate-900 text-white border-slate-900 shadow-sm'
                             : 'bg-slate-50 hover:bg-slate-100 text-slate-700 border-slate-200'
@@ -188,36 +267,38 @@ export const RegistrationModal: React.FC<RegistrationModalProps> = ({
               <div className="bg-slate-50 p-3 rounded-2xl border border-slate-200 text-xs text-slate-600 space-y-1">
                 <div className="font-bold text-slate-800 flex items-center space-x-1.5">
                   <ShieldCheck className="w-4 h-4 text-emerald-600" />
-                  <span>Jaminan Kerahasiaan & Transparansi Data:</span>
+                  <span>Verifikasi Cepat & Langsung:</span>
                 </div>
-                <p className="text-[11px]">
-                  Data Anda akan diteruskan ke tim operasional Talisea.id untuk verifikasi lapangan di sentra produksi / kawasan industri pengolah dan jadwal penjemputan percontohan.
+                <p className="text-[11px] text-slate-500">
+                  Data pendaftaran Anda langsung terhubung ke tim operasional Talisea.id untuk proses verifikasi dan validasi kemitraan.
                 </p>
               </div>
 
               <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-3">
                 <a
-                  href={`https://wa.me/6285249402129?text=Halo%20Talisea.id,%20saya%20ingin%20bergabung%20sebagai%20mitra%20rantai%20pasok%20rumput%20laut.%20Peran:%20${encodeURIComponent(selectedRole)}`}
+                  href={generateWhatsAppUrl()}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-full sm:w-auto text-center px-4 py-2.5 rounded-xl bg-emerald-50 text-emerald-700 border border-emerald-200 text-xs font-bold hover:bg-emerald-100 transition-colors"
+                  className="w-full sm:w-auto text-center px-4 py-2.5 rounded-xl bg-emerald-50 text-emerald-700 border border-emerald-200 text-xs font-bold hover:bg-emerald-100 transition-colors flex items-center justify-center space-x-1.5"
                 >
-                  💬 Hubungi WA Langsung (+62 852-4940-2129)
+                  <Send className="w-3.5 h-3.5" />
+                  <span>Kirim ke WhatsApp Admin</span>
                 </a>
                 
                 <div className="flex items-center space-x-2 w-full sm:w-auto justify-end">
                   <button
                     type="button"
                     onClick={onClose}
-                    className="px-4 py-2.5 rounded-xl border border-slate-200 text-slate-600 text-xs font-bold hover:bg-slate-50"
+                    className="px-4 py-2.5 rounded-xl border border-slate-200 text-slate-600 text-xs font-bold hover:bg-slate-50 cursor-pointer"
                   >
                     Batal
                   </button>
                   <button
                     type="submit"
-                    className="px-6 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold flex items-center justify-center space-x-2 shadow-md transition-all cursor-pointer"
+                    disabled={isSubmitting}
+                    className="px-6 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold flex items-center justify-center space-x-2 shadow-md transition-all cursor-pointer disabled:opacity-50"
                   >
-                    <span>Kirim Formulir Mitra</span>
+                    <span>{isSubmitting ? 'Memproses...' : 'Daftar Kemitraan'}</span>
                     <ArrowRight className="w-4 h-4" />
                   </button>
                 </div>
@@ -227,31 +308,34 @@ export const RegistrationModal: React.FC<RegistrationModalProps> = ({
           </div>
         ) : (
           /* Success Screen */
-          <div className="text-center py-8 space-y-4 animate-in zoom-in duration-200">
+          <div className="text-center py-6 space-y-4 animate-in zoom-in duration-200">
             <div className="w-16 h-16 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center mx-auto">
               <CheckCircle2 className="w-10 h-10" />
             </div>
+            
             <h3 className="text-xl font-extrabold text-slate-900">
               Pendaftaran Mitra Berhasil!
             </h3>
+            
             <p className="text-xs text-slate-600 max-w-md mx-auto leading-relaxed">
-              Terima kasih, <strong>{fullName || 'Mitra'}</strong>. Tim koordinator lapangan Talisea.id akan segera menghubungi nomor WhatsApp <strong>{phone}</strong> untuk koordinasi teknis dan penjemputan batch pertama.
+              Data pendaftaran <strong>{fullName || 'Mitra'}</strong> telah tersimpan di sistem Talisea.id. Tim operasional kami akan segera menghubungi Anda.
             </p>
-            <div className="pt-4 flex flex-col sm:flex-row items-center justify-center gap-3">
+
+            <div className="pt-3 flex flex-col sm:flex-row items-center justify-center gap-3">
               <a
-                href={`https://wa.me/6285249402129?text=Halo%20Talisea.id,%20saya%20baru%20saja%20mendaftar%20kemitraan%20atas%20nama%20${encodeURIComponent(fullName || 'Mitra')}%20(${encodeURIComponent(location)})`}
+                href={generateWhatsAppUrl()}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs flex items-center justify-center space-x-2 transition-all shadow-md shadow-emerald-600/20"
               >
-                <span>Konfirmasi Cepat via WhatsApp</span>
-                <ArrowRight className="w-4 h-4" />
+                <Send className="w-4 h-4" />
+                <span>Buka WhatsApp</span>
               </a>
               <button
                 onClick={onClose}
-                className="w-full sm:w-auto px-6 py-2.5 rounded-xl bg-slate-900 text-white font-bold text-xs"
+                className="w-full sm:w-auto px-6 py-2.5 rounded-xl bg-slate-900 text-white font-bold text-xs cursor-pointer"
               >
-                Tutup & Kembali ke Aplikasi
+                Tutup & Selesai
               </button>
             </div>
           </div>

@@ -12,6 +12,7 @@ import { QCTestingSimulator } from './components/QCTestingSimulator';
 import { LogisticsTracker } from './components/LogisticsTracker';
 import { MarginCalculator } from './components/MarginCalculator';
 import { RegionalFactoryPriceBoard } from './components/RegionalFactoryPriceBoard';
+import { RevenueSharingBreakdown } from './components/RevenueSharingBreakdown';
 import { RegistrationModal } from './components/RegistrationModal';
 import { ReceiptModal } from './components/ReceiptModal';
 import { WhatsAppPreviewModal } from './components/WhatsAppPreviewModal';
@@ -77,6 +78,12 @@ export default function App() {
             <RoleBreakdownSection 
               onOpenRegister={handleOpenRegister} 
             />
+            {/* Direct Official Revenue Sharing Transparency Section */}
+            <div id="transparansi-bagi-hasil-section" className="py-12 bg-slate-100/80 border-y border-slate-200">
+              <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <RevenueSharingBreakdown onOpenRegister={handleOpenRegister} />
+              </div>
+            </div>
             <StagedPaymentSection />
             <PilotMetricsSection 
               onOpenRegister={handleOpenRegister}
@@ -133,7 +140,7 @@ export default function App() {
 
         {activeTab === 'calculator' && (
           <div className="animate-in fade-in duration-200">
-            <MarginCalculator />
+            <MarginCalculator onOpenRegister={handleOpenRegister} />
           </div>
         )}
       </main>

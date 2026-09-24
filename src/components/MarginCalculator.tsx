@@ -14,9 +14,16 @@ import {
   PieChart
 } from 'lucide-react';
 
-export const MarginCalculator: React.FC = () => {
+import { RevenueSharingBreakdown } from './RevenueSharingBreakdown';
+
+interface MarginCalculatorProps {
+  onOpenRegister?: (role?: string) => void;
+}
+
+export const MarginCalculator: React.FC<MarginCalculatorProps> = ({ onOpenRegister }) => {
+  const [activeTabMode, setActiveTabMode] = useState<'revenue-share' | 'comparison'>('revenue-share');
   const [harvestWeightKg, setHarvestWeightKg] = useState<number>(3000);
-  const [factoryOfferPrice, setFactoryOfferPrice] = useState<number>(20000);
+  const [factoryOfferPrice, setFactoryOfferPrice] = useState<number>(37000);
   const [moistureStandard, setMoistureStandard] = useState<number>(35.0);
 
   // Traditional breakdown
@@ -52,21 +59,55 @@ export const MarginCalculator: React.FC = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Header */}
-        <div className="text-center max-w-3xl mx-auto mb-12">
+        <div className="text-center max-w-3xl mx-auto mb-10">
           <div className="inline-flex items-center space-x-2 px-3.5 py-1 rounded-full text-xs font-bold bg-emerald-100 text-emerald-900 border border-emerald-200 mb-3">
             <Calculator className="w-3.5 h-3.5 text-emerald-700" />
-            <span>KALKULATOR MARGIN & EFISIENSI BIAYA (PDF BAB 5 & 8)</span>
+            <span>TRANSPARANSI HARGA, BAGI HASIL & MARGIN PETANI</span>
           </div>
           <h1 className="text-2xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
-            Kalkulator Selisih Pendapatan Petani & Efisiensi Rantai
+            Transparansi Alokasi Biaya & Selisih Pendapatan Petani
           </h1>
           <p className="mt-3 text-xs sm:text-sm text-slate-600 leading-relaxed">
-            Bandingkan penghasilan riil petani antara skema tengkulak berlapis (potongan timbangan subjektif) vs skema terpadu Talisea.id (QC digital + logistik teragregasi).
+            Menjamin keadilan rantai pasok: Alokasi pembagian dari harga pabrik terbuka 100% dan petani menerima hasil bersih 89,2% tanpa potongan timbangan spekulatif.
           </p>
+
+          {/* Navigation Toggle */}
+          <div className="flex items-center justify-center mt-6">
+            <div className="bg-slate-200/80 p-1 rounded-2xl border border-slate-300 inline-flex space-x-1 shadow-inner">
+              <button
+                onClick={() => setActiveTabMode('revenue-share')}
+                className={`flex items-center space-x-2 px-4 sm:px-6 py-2.5 rounded-xl text-xs sm:text-sm font-extrabold transition-all cursor-pointer ${
+                  activeTabMode === 'revenue-share'
+                    ? 'bg-slate-900 text-white shadow-md'
+                    : 'text-slate-700 hover:text-slate-900 hover:bg-slate-100/60'
+                }`}
+              >
+                <PieChart className="w-4 h-4 text-emerald-400" />
+                <span>Persentase Bagi Hasil</span>
+              </button>
+              
+              <button
+                onClick={() => setActiveTabMode('comparison')}
+                className={`flex items-center space-x-2 px-4 sm:px-6 py-2.5 rounded-xl text-xs sm:text-sm font-extrabold transition-all cursor-pointer ${
+                  activeTabMode === 'comparison'
+                    ? 'bg-slate-900 text-white shadow-md'
+                    : 'text-slate-700 hover:text-slate-900 hover:bg-slate-100/60'
+                }`}
+              >
+                <TrendingUp className="w-4 h-4 text-emerald-400" />
+                <span>Simulasi Selisih Margin vs Tengkulak</span>
+              </button>
+            </div>
+          </div>
         </div>
 
-        {/* Calculator Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+        {activeTabMode === 'revenue-share' ? (
+          <div className="animate-in fade-in duration-200">
+            <RevenueSharingBreakdown onOpenRegister={onOpenRegister} />
+          </div>
+        ) : (
+          /* Calculator Grid */
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start animate-in fade-in duration-200">
           
           {/* Controls */}
           <div className="lg:col-span-6 bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-sm space-y-6">
@@ -108,17 +149,17 @@ export const MarginCalculator: React.FC = () => {
               </div>
               <input
                 type="range"
-                min="17000"
-                max="24000"
-                step="250"
+                min="10000"
+                max="50000"
+                step="500"
                 value={factoryOfferPrice}
                 onChange={(e) => setFactoryOfferPrice(Number(e.target.value))}
                 className="w-full h-2.5 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-emerald-600"
               />
               <div className="flex justify-between text-[10px] text-slate-400">
-                <span>Rp 17.000 (Standar)</span>
-                <span>Rp 20.000 (Rata-rata Pasar)</span>
-                <span>Rp 24.000 (Super Premium)</span>
+                <span>Rp 10.000</span>
+                <span>Rp 30.000</span>
+                <span>Rp 50.000</span>
               </div>
             </div>
 
@@ -234,6 +275,7 @@ export const MarginCalculator: React.FC = () => {
           </div>
 
         </div>
+        )}
 
       </div>
     </div>

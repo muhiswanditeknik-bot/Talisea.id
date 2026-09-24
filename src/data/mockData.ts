@@ -307,7 +307,7 @@ export const ACTIVE_LOGISTICS_ROUTES: LogisticsRoute[] = [
 
 export const PILOT_KPI_DATA: PilotKPI = {
   selisihHargaPetani: '+22.4%', // Harga naik dibanding tengkulak tradisional
-  biayaLogistikKg: 'Rp 1.350 / kg', // Termasuk pickup, handling, kapal, trucking
+  biayaLogistikKg: 'Logistik 5,4% • Admin 2,7% • Gudang Hub 2,7%', // Biaya logistik/Handling 5,4%, admin 2,7% dan Gudang hub 2,7% dari Harga pabrik
   kecepatanPayout: '< 4 Jam (Tahap 1 85%)', // Petani langsung dapat uang di Sentra Hulu
   akurasiQCDiscrepancy: '0.8% Selisih', // Deviasi kadar air Hub vs Pabrik sangat minim
   onTimeDelivery: '99.1%',
@@ -348,7 +348,7 @@ export const INITIAL_FACTORY_OFFERS: FactoryPriceOffer[] = [
     id: 'FAC-SULSEL-01',
     factoryName: 'PT Celebes Seaweed Industries',
     region: 'Sulawesi Selatan',
-    city: 'Pinrang / Parepare',
+    city: 'Pabrik / Parepare',
     seaweedType: 'Eucheuma Cottonii',
     gradeRequirement: 'Grade A (KA 35-37%)',
     maxMoisturePercent: 36.0,
@@ -691,12 +691,12 @@ export const FARMER_ORIGIN_REGIONS: FarmerOriginRegion[] = [
 export const SHIPPING_ROUTE_COSTS: RegionalShippingRouteCost[] = [
   // From Kaltara (Mamolo/Sebatik)
   {
-    id: 'ROUTE-NNK-PINRANG',
+    id: 'ROUTE-NNK-PABRIK',
     originId: 'ORIGIN-KALTARA-01',
     destinationFactoryId: 'FAC-SULSEL-01',
     seaFreightPerKg: 1100, // Kargo laut Tunon Taka -> Parepare
     portHandlingPerKg: 180,
-    truckingLastMilePerKg: 320, // Parepare -> Gudang Pinrang
+    truckingLastMilePerKg: 320, // Parepare -> Gudang Pabrik
     quarantineInsurancePerKg: 100,
     transitDays: 3,
     transportMode: 'Kapal Laut + Trucking',
@@ -765,7 +765,7 @@ export const SHIPPING_ROUTE_COSTS: RegionalShippingRouteCost[] = [
 
   // From Tarakan (Kaltara-02)
   {
-    id: 'ROUTE-TRK-PINRANG',
+    id: 'ROUTE-TRK-PABRIK',
     originId: 'ORIGIN-KALTARA-02',
     destinationFactoryId: 'FAC-SULSEL-01',
     seaFreightPerKg: 1050,
@@ -791,12 +791,12 @@ export const SHIPPING_ROUTE_COSTS: RegionalShippingRouteCost[] = [
 
   // From Jeneponto & Takalar (Sulsel-01)
   {
-    id: 'ROUTE-JNP-PINRANG',
+    id: 'ROUTE-JNP-PABRIK',
     originId: 'ORIGIN-SULSEL-01',
     destinationFactoryId: 'FAC-SULSEL-01',
     seaFreightPerKg: 0, // Jalur Darat
     portHandlingPerKg: 0,
-    truckingLastMilePerKg: 480, // Truk ekspedisi darat Jeneponto -> Pinrang (240 km)
+    truckingLastMilePerKg: 480, // Truk ekspedisi darat Jeneponto -> Pabrik (240 km)
     quarantineInsurancePerKg: 50,
     transitDays: 1,
     transportMode: 'Darat / Trucking Langsung',
@@ -829,12 +829,12 @@ export const SHIPPING_ROUTE_COSTS: RegionalShippingRouteCost[] = [
 
   // From Luwu & Wotu (Sulsel-02)
   {
-    id: 'ROUTE-LUWU-PINRANG',
+    id: 'ROUTE-LUWU-PABRIK',
     originId: 'ORIGIN-SULSEL-02',
     destinationFactoryId: 'FAC-SULSEL-01',
     seaFreightPerKg: 0,
     portHandlingPerKg: 0,
-    truckingLastMilePerKg: 420, // Luwu/Palopo -> Pinrang via jalur darat Enrekang/Sidrap
+    truckingLastMilePerKg: 420, // Luwu/Palopo -> Pabrik via jalur darat Enrekang/Sidrap
     quarantineInsurancePerKg: 50,
     transitDays: 1,
     transportMode: 'Darat / Trucking Langsung',
@@ -855,7 +855,7 @@ export const SHIPPING_ROUTE_COSTS: RegionalShippingRouteCost[] = [
 
   // From Bombana & Kendari (Sultra-01)
   {
-    id: 'ROUTE-KDR-PINRANG',
+    id: 'ROUTE-KDR-PABRIK',
     originId: 'ORIGIN-SULTRA-01',
     destinationFactoryId: 'FAC-SULSEL-01',
     seaFreightPerKg: 450, // Ferry Kolaka-Bajoe / Siwa + Truk
@@ -864,7 +864,7 @@ export const SHIPPING_ROUTE_COSTS: RegionalShippingRouteCost[] = [
     quarantineInsurancePerKg: 80,
     transitDays: 2,
     transportMode: 'Ferry Roro + Trucking',
-    routeNotes: 'Ferry penyeberangan Teluk Bone (Kolaka - Bajoe) + armada trucking ke Pinrang.'
+    routeNotes: 'Ferry penyeberangan Teluk Bone (Kolaka - Bajoe) + armada trucking ke Pabrik.'
   },
   {
     id: 'ROUTE-KDR-SBY',
@@ -893,7 +893,7 @@ export const SHIPPING_ROUTE_COSTS: RegionalShippingRouteCost[] = [
     routeNotes: 'Kapal Roro KM Dharma Rucitra VII rute Lembar - Surabaya.'
   },
   {
-    id: 'ROUTE-NTB-PINRANG',
+    id: 'ROUTE-NTB-PABRIK',
     originId: 'ORIGIN-NTB-01',
     destinationFactoryId: 'FAC-SULSEL-01',
     seaFreightPerKg: 1100,
@@ -902,7 +902,7 @@ export const SHIPPING_ROUTE_COSTS: RegionalShippingRouteCost[] = [
     quarantineInsurancePerKg: 100,
     transitDays: 4,
     transportMode: 'Kapal Laut + Trucking',
-    routeNotes: 'Kargo laut NTB ke Makassar + trucking ke Pinrang.'
+    routeNotes: 'Kargo laut NTB ke Makassar + trucking ke Pabrik.'
   },
   {
     id: 'ROUTE-NTB-BALI',
@@ -931,7 +931,7 @@ export const SHIPPING_ROUTE_COSTS: RegionalShippingRouteCost[] = [
     routeNotes: 'Kapal kontainer tol laut / Meratus Kupang - Tanjung Perak.'
   },
   {
-    id: 'ROUTE-NTT-PINRANG',
+    id: 'ROUTE-NTT-PABRIK',
     originId: 'ORIGIN-NTT-01',
     destinationFactoryId: 'FAC-SULSEL-01',
     seaFreightPerKg: 1400,
@@ -940,7 +940,7 @@ export const SHIPPING_ROUTE_COSTS: RegionalShippingRouteCost[] = [
     quarantineInsurancePerKg: 110,
     transitDays: 5,
     transportMode: 'Kapal Laut + Trucking',
-    routeNotes: 'Kargo laut Kupang - Makassar + trucking Parepare/Pinrang.'
+    routeNotes: 'Kargo laut Kupang - Makassar + trucking Parepare/Pabrik.'
   },
 
   // From Jatim (Sidoarjo/Pasuruan)

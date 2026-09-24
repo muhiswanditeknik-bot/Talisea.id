@@ -26,7 +26,7 @@ export const RoleBreakdownSection: React.FC<RoleBreakdownProps> = ({ onOpenRegis
     {
       id: 'petani',
       name: 'PETANI RUMPUT LAUT',
-      location: 'Nunukan, Sebatik, Mansapa & Sekitarnya',
+      location: 'Sentra Petani, Sebatik, Mansapa & Sekitarnya',
       icon: Anchor,
       tag: 'Produsen Bahan Baku',
       color: 'emerald',
@@ -34,7 +34,7 @@ export const RoleBreakdownSection: React.FC<RoleBreakdownProps> = ({ onOpenRegis
         'Melakukan budidaya bentangan tali di perairan laut bersih',
         'Panen dan penjemuran matahari sesuai standar kemampuan',
         'Menyerahkan hasil panen ke Hub atau menyediakan akses penjemputan perahu/pickup',
-        'Menerima nota timbang digital dan pencairan dana tahap pertama (80-90%) tanpa menunggu kapal tiba di Pinrang'
+        'Menerima nota timbang digital dan pencairan dana tahap pertama (80-90%) tanpa menunggu tiba di pabrik'
       ],
       benefits: [
         'Tidak pusing mengurus izin kapal, kargo, buruh pelabuhan, dan pabrik',
@@ -43,8 +43,8 @@ export const RoleBreakdownSection: React.FC<RoleBreakdownProps> = ({ onOpenRegis
       ]
     },
     {
-      id: 'hub_nunukan',
-      name: 'MITRA HUB / POSKO NUNUKAN',
+      id: 'hub_petani',
+      name: 'MITRA HUB / POSKO PETANI',
       location: 'Titik Kumpul Mamolo, Sebatik & Tunon Taka',
       icon: Scale,
       tag: 'First-Mile & Konsolidasi Mutu',
@@ -70,7 +70,7 @@ export const RoleBreakdownSection: React.FC<RoleBreakdownProps> = ({ onOpenRegis
       tag: 'Orkestrator & Escrow',
       color: 'blue',
       duties: [
-        'Smart matching antara suplai petani di Nunukan dengan spesifikasi PO pabrik di Pinrang',
+        'Smart matching antara suplai petani dengan spesifikasi PO Pabrik',
         'Pencatatan transaksi digital, kontrak beli, dan faktur elektronik',
         'Pengelolaan sistem pembayaran bertahap (smart escrow payout)',
         'Koordinasi kontrol alur QC asal dan QC tujuan',
@@ -85,14 +85,14 @@ export const RoleBreakdownSection: React.FC<RoleBreakdownProps> = ({ onOpenRegis
     {
       id: 'ekspedisi',
       name: 'MITRA EKSPEDISI KARGO LAUT',
-      location: 'Rute Pelayaran Nunukan/Tarakan ➔ Parepare/Makassar',
+      location: 'Rute Pelayaran Petani/Tarakan ➔ Parepare/Makassar',
       icon: Ship,
       tag: 'Mid-Mile Logistik Antarpulau',
       color: 'cyan',
       duties: [
         'Penyediaan ruang muat kontainer berventilasi atau kargo kapal terjadwal',
         'Pengurusan dokumen manifest pelabuhan & karantina tumbuhan laut',
-        'Pengangkutan antarpulau dari Pelabuhan Tunon Taka Nunukan ke Sulawesi Selatan',
+        'Pengangkutan antarpulau dari Pelabuhan Tunon Taka Petani ke Sulawesi Selatan',
         'Pemberitahuan posisi status kapal & pelacakan kontainer secara real-time'
       ],
       benefits: [
@@ -102,15 +102,15 @@ export const RoleBreakdownSection: React.FC<RoleBreakdownProps> = ({ onOpenRegis
       ]
     },
     {
-      id: 'mitra_pinrang',
-      name: 'MITRA SULSEL / TRUCKING LAST-MILE',
-      location: 'Pelabuhan Parepare / Makassar ➔ Pinrang',
+      id: 'mitra_lastmile',
+      name: 'MITRA SULSEL / TRUCKING LAST-MILE PABRIK',
+      location: 'Pelabuhan Parepare / Makassar ➔ Pabrik',
       icon: Truck,
       tag: 'Last-Mile Delivery',
       color: 'indigo',
       duties: [
         'Penerimaan kargo saat kapal sandar di pelabuhan tujuan (Parepare/Makassar)',
-        'Pengurusan bongkar muat dan trucking darat menuju gudang pabrik di Pinrang',
+        'Pengurusan bongkar muat dan trucking darat menuju gudang Pabrik',
         'Koordinasi serah terima fisik barang bersama tim QC pabrik',
         'Pengesahan berita acara serah terima digital (BAST)'
       ],
@@ -120,9 +120,9 @@ export const RoleBreakdownSection: React.FC<RoleBreakdownProps> = ({ onOpenRegis
       ]
     },
     {
-      id: 'pabrik_pinrang',
+      id: 'pabrik_industri',
       name: 'PABRIK / OFF-TAKER INDUSTRI',
-      location: 'Kawasan Industri Pengolahan Rumput Laut Pinrang',
+      location: 'Kawasan Industri Pengolahan Rumput Laut Pabrik',
       icon: Building2,
       tag: 'End Buyer & Hilirisasi',
       color: 'amber',
@@ -151,7 +151,7 @@ export const RoleBreakdownSection: React.FC<RoleBreakdownProps> = ({ onOpenRegis
             <span>PEMBAGIAN PERAN & TANGGUNG JAWAB (PDF BAB 4)</span>
           </div>
           <h2 className="text-2xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
-            Sinergi 6 Pilar Ekosistem <span className="text-teal-700">Nunukan ➔ Pinrang</span>
+            Sinergi 6 Pilar Ekosistem <span className="text-teal-700">Petani ke Pabrik</span>
           </h2>
           <p className="mt-4 text-sm sm:text-base text-slate-600 leading-relaxed">
             Setiap pihak fokus pada keahliannya masing-masing. Tidak ada lagi pihak yang dibebani tugas di luar kapasitasnya.

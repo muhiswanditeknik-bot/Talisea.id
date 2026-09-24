@@ -24,8 +24,8 @@ export const LogisticsTracker: React.FC = () => {
   const stages = [
     {
       step: 1,
-      title: 'First-Mile (Nunukan)',
-      desc: 'Penjemputan hasil jemur petani di pesisir Mamolo/Sebatik & konsolidasi gudang Hub Nunukan.',
+      title: 'First-Mile (Sentra Petani)',
+      desc: 'Penjemputan hasil jemur petani di pesisir Mamolo/Sebatik & konsolidasi gudang Hub Petani.',
       status: 'Selesai',
       completed: true,
       icon: Anchor
@@ -41,7 +41,7 @@ export const LogisticsTracker: React.FC = () => {
     {
       step: 3,
       title: 'Mid-Mile Pelayaran Laut',
-      desc: 'Pelayaran lintas pulau KM Thalia melintasi Selat Makassar rute Nunukan menuju Pelabuhan Parepare.',
+      desc: 'Pelayaran lintas pulau KM Thalia melintasi Selat Makassar rute Pelabuhan Asal Petani menuju Pelabuhan Parepare.',
       status: 'Sedang Berlayar',
       completed: false,
       active: true,
@@ -50,15 +50,15 @@ export const LogisticsTracker: React.FC = () => {
     {
       step: 4,
       title: 'Transit Pelabuhan Parepare',
-      desc: 'Bongkar kargo di dermaga Parepare & transfer ke armada trucking darat (jarak tempuh 45 km ke Pinrang).',
+      desc: 'Bongkar kargo di dermaga Parepare & transfer ke armada trucking darat (menuju Pabrik).',
       status: 'Menunggu Sandar',
       completed: false,
       icon: Navigation
     },
     {
       step: 5,
-      title: 'Last-Mile & Pabrik Pinrang',
-      desc: 'Pengantaran ke gudang PT Celebes Seaweed Pinrang, QC akhir penerimaan, BAST & pelunasan 15%.',
+      title: 'Last-Mile & Gudang Pabrik',
+      desc: 'Pengantaran ke gudang PT Celebes Seaweed (Pabrik), QC akhir penerimaan, BAST & pelunasan 15%.',
       status: 'Jadwal 27 Agt',
       completed: false,
       icon: Truck
@@ -77,10 +77,10 @@ export const LogisticsTracker: React.FC = () => {
               <span>SISTEM PELACAKAN LOGISTIK MULTI-MODA (PDF BAB 7 & 8)</span>
             </div>
             <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
-              Pelacakan Kargo Laut & Darat: Nunukan ➔ Pinrang
+              Pelacakan Kargo Laut & Darat: Petani ➔ Pabrik
             </h1>
             <p className="text-xs text-slate-500 mt-0.5">
-              First-Mile Nunukan • Mid-Mile Kapal Antarpulau • Last-Mile Trucking ke Pintu Pabrik
+              First-Mile Petani • Mid-Mile Kapal Antarpulau • Last-Mile Trucking ke Pintu Pabrik
             </p>
           </div>
 
@@ -222,14 +222,14 @@ export const LogisticsTracker: React.FC = () => {
               <span>Kelengkapan Dokumen Karantina & Pelabuhan:</span>
             </div>
             <p className="text-slate-600 leading-relaxed">
-              Semua kargo yang diangkut telah melalui pemeriksaan Balai Karantina Hewan, Ikan, dan Tumbuhan (BKHIT) Nunukan dengan sertifikat bebas hama dan dokumen manifest resmi terverifikasi.
+              Semua kargo yang diangkut telah melalui pemeriksaan Balai Karantina Hewan, Ikan, dan Tumbuhan (BKHIT) Wilayah Petani dengan sertifikat bebas hama dan dokumen manifest resmi terverifikasi.
             </p>
           </div>
 
           <div className="bg-white p-5 rounded-2xl border border-slate-200 text-xs space-y-2">
             <div className="flex items-center space-x-2 font-bold text-slate-900">
               <Truck className="w-4 h-4 text-cyan-600" />
-              <span>Mitra Trucking Last-Mile Pinrang:</span>
+              <span>Mitra Trucking Last-Mile Pabrik:</span>
             </div>
             <p className="text-slate-600 leading-relaxed">
               Armada trucking siap siaga di Pelabuhan Parepare sebelum kapal sandar untuk mencegah penumpukan kargo dan memastikan barang sampai di pabrik dalam waktu kurang dari 3 jam setelah pembongkaran.

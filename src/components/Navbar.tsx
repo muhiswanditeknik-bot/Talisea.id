@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   Anchor, 
   Layers, 
@@ -14,9 +14,12 @@ import {
   ArrowRight,
   TrendingUp,
   MapPin,
-  Building2
+  Building2,
+  FileSpreadsheet
 } from 'lucide-react';
 import { TaliseaLogo } from './TaliseaLogo';
+import { initAuth } from '../lib/googleAuth';
+import { User } from 'firebase/auth';
 
 interface NavbarProps {
   activeTab: string;
@@ -26,6 +29,16 @@ interface NavbarProps {
 
 export const Navbar: React.FC<NavbarProps> = ({ activeTab, setActiveTab, onOpenRegister }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [googleUser, setGoogleUser] = useState<User | null>(null);
+
+  useEffect(() => {
+    const unsub = initAuth((user) => {
+      setGoogleUser(user);
+    });
+    return () => unsub();
+  }, []);
+
+  const sheetId = typeof window !== 'undefined' ? localStorage.getItem('talisea_google_sheet_id') : null;
 
   const navItems = [
     { id: 'landing', label: 'Beranda & Konsep', icon: Layers },
@@ -35,7 +48,7 @@ export const Navbar: React.FC<NavbarProps> = ({ activeTab, setActiveTab, onOpenR
     { id: 'inventory', label: 'Sistem Inventaris', icon: Warehouse, badge: 'Hub Sentra' },
     { id: 'qc-tester', label: 'Simulator QC', icon: Activity },
     { id: 'logistics', label: 'Pelacakan Kargo', icon: Ship },
-    { id: 'calculator', label: 'Kalkulator Margin', icon: Calculator },
+    { id: 'calculator', label: 'Bagi Hasil & Margin', icon: Calculator, badge: '89,2% Petani' },
   ];
 
   return (
@@ -55,10 +68,6 @@ export const Navbar: React.FC<NavbarProps> = ({ activeTab, setActiveTab, onOpenR
             </span>
           </div>
           <div className="flex items-center space-x-4 text-slate-300">
-            <div className="flex items-center space-x-1.5">
-              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-              <span className="text-[11px] text-slate-200 font-medium">Harga Spot Cottonii: Rp 19.500/kg</span>
-            </div>
             <button 
               onClick={() => onOpenRegister('petani')}
               className="hover:text-emerald-400 transition-colors underline text-[11px] font-semibold hidden md:inline-block cursor-pointer"
@@ -75,9 +84,11 @@ export const Navbar: React.FC<NavbarProps> = ({ activeTab, setActiveTab, onOpenR
           {/* Brand Logo */}
           <div 
             onClick={() => setActiveTab('landing')}
-            className="cursor-pointer group select-none py-2"
+            className="cursor-pointer group select-none py-1"
           >
-            <TaliseaLogo size="md" showTagline={false} theme="dark" />
+            <div className="bg-slate-950 hover:bg-slate-900 px-3.5 py-1.5 rounded-2xl border border-slate-800 shadow-sm flex items-center transition-all group-hover:border-emerald-500/40">
+              <TaliseaLogo size="md" showTagline={false} theme="white" />
+            </div>
           </div>
 
           {/* Desktop Nav Items */}
@@ -111,6 +122,19 @@ export const Navbar: React.FC<NavbarProps> = ({ activeTab, setActiveTab, onOpenR
 
           {/* Action CTAs */}
           <div className="hidden lg:flex items-center space-x-3">
+            {sheetId && (
+              <a
+                href={`https://docs.google.com/spreadsheets/d/${sheetId}/edit`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center space-x-1.5 px-3 py-2 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-bold hover:bg-emerald-100 transition-colors"
+                title="Buka Google Sheets Kemitraan (4 Sheet Terpisah)"
+              >
+                <FileSpreadsheet className="w-3.5 h-3.5 text-emerald-600" />
+                <span>Google Sheet</span>
+              </a>
+            )}
+
             <button
               onClick={() => setActiveTab('inventory')}
               className="flex items-center space-x-2 px-3.5 py-2.5 rounded-xl border border-slate-200 text-slate-700 text-xs font-bold hover:bg-slate-50 hover:text-slate-900 transition-colors cursor-pointer"
